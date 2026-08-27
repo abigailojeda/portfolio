@@ -1,16 +1,16 @@
 :root,
-[data-theme="light"] {
-  --color-background: #ffffff;
-  --color-foreground: #171717;
+[data-theme='light'] {
+  --ds-color-background: #ffffff;
+  --ds-color-foreground: #171717;
 
-  --color-surface: #f7f7f8;
-  --color-surface-foreground: #171717;
+  --ds-color-surface: #f7f7f8;
+  --ds-color-surface-foreground: #171717;
 
-  --color-primary: #6d5dfc;
-  --color-primary-foreground: #ffffff;
+  --ds-color-primary: #6d5dfc;
+  --ds-color-primary-foreground: #ffffff;
 
-  --color-muted: #eeeeef;
-  --color-muted-foreground: #666666;
+  --ds-color-muted: #eeeeef;
+  --ds-color-muted-foreground: #666666;
 
-  --color-border: #dddddf;
+  --ds-color-border: #dddddf;
 }

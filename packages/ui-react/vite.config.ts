@@ -1,6 +1,9 @@
 import { defineConfig } from "vite";
+import tailwindcss from "@tailwindcss/vite";
 
 export default defineConfig({
+  plugins: [tailwindcss()],
+
   oxc: {
     jsx: {
       runtime: "automatic",
@@ -14,7 +17,6 @@ export default defineConfig({
       formats: ["es"],
       fileName: "index",
     },
-
     rolldownOptions: {
       external: ["react", "react-dom", "react/jsx-runtime"],
     },

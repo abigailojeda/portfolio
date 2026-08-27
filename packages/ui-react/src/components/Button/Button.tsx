@@ -6,8 +6,11 @@ export type ButtonProps = PropsWithChildren<
 
 export function Button({ children, ...props }: ButtonProps) {
   return (
-    <button data-ui-source="@portfolio/ui-react" {...props}>
-      UI React: {children}
+    <button
+      className="rounded-lg bg-primary px-4 py-2 font-medium text-primary-foreground"
+      {...props}
+    >
+      {children}
     </button>
-  );
+  )
 }

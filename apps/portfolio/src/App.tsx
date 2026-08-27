@@ -1,13 +1,11 @@
 import { Button } from "@portfolio/ui-react";
 
-function App() {
+export default function App() {
   return (
-    <main>
-      <h1>Portfolio</h1>
+    <main className="min-h-screen bg-background p-8 text-foreground">
+      <h1 className="text-4xl font-bold">Portfolio</h1>
 
-      <Button type="button">Hello</Button>
+      <Button>Hello from ui-react</Button>
     </main>
   );
 }
-
-export default App;

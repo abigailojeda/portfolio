@@ -1,0 +1,6 @@
+@import 'tailwindcss';
+
+@import '@portfolio/design-tokens';
+@import '@portfolio/design-tokens/tailwind';
+
+@source '../../../packages/ui-react/src';
