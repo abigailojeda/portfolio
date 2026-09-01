@@ -1,0 +1,26 @@
+export default {
+  git: {
+    requireBranch: "main",
+    requireCleanWorkingDir: true,
+    commitMessage: "chore(release): v${version}",
+    tagName: "v${version}",
+    push: true,
+  },
+
+  github: {
+    release: true,
+  },
+
+  npm: {
+    publish: false,
+  },
+
+  plugins: {
+    "@release-it/conventional-changelog": {
+      preset: {
+        name: "conventionalcommits",
+      },
+      infile: "CHANGELOG.md",
+    },
+  },
+};

@@ -1,5 +1,5 @@
-@import 'tailwindcss';
+@import "tailwindcss";
 
-@import '@portfolio/design-tokens/tailwind';
+@import "@portfolio/design-tokens/tailwind";
 
 @source './components';
