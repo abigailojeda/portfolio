@@ -65,6 +65,7 @@ jobs:
     concurrency:
       group: release-main
       cancel-in-progress: false
+      queue: max
 
     steps:
       - name: Checkout repository
@@ -93,6 +94,13 @@ jobs:
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
 
       - name: Release
-        run: pnpm release -- --ci
+        run: |
+          git fetch origin main
+          if [ "$(git rev-parse HEAD)" != "$RELEASE_SHA" ] || [ "$(git rev-parse origin/main)" != "$RELEASE_SHA" ]; then
+            echo "::notice::Skipping release because main no longer matches the commit that passed quality checks."
+            exit 0
+          fi
+          pnpm run release:ci
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          RELEASE_SHA: ${{ github.sha }}
