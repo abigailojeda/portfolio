@@ -1,7 +1,10 @@
 :root,
 [data-theme="light"] {
-  --ds-color-background: #ffffff;
-  --ds-color-foreground: #171717;
+  --ds-color-background: #f4f1ed;
+  --ds-color-foreground: #000000;
+
+  --ds-color-blob-back: #cbd1d8;
+  --ds-color-blob-front: #e1e8f0;
 
   --ds-color-surface: #f7f7f8;
   --ds-color-surface-foreground: #171717;
