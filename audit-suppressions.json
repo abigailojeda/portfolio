@@ -1,0 +1,10 @@
+[
+  {
+    "advisory": "GHSA-vfj7-8cjw-p6xm",
+    "package": "braces",
+    "version": "3.0.3",
+    "reason": "No patched release is published. Transitive dependency of Commitizen's local directory search, which defaults to the constant node_modules pattern. No attacker-controlled pattern source was demonstrated.",
+    "issue": "https://github.com/abigailojeda/portfolio/issues/3",
+    "reviewAfter": "2026-11-18"
+  }
+]

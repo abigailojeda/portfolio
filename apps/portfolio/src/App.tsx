@@ -1,11 +1,20 @@
-import { Button } from "@portfolio/ui-react";
+import { StatusScreen } from "@portfolio/ui-react";
+import type { ReactElement } from "react";
 
-export default function App() {
+import { ComingSoonIllustration } from "./components/ComingSoonIllustration";
+
+export default function App(): ReactElement {
   return (
-    <main className="min-h-screen bg-background p-8 text-foreground">
-      <h1 className="text-4xl font-bold">Portfolio</h1>
-
-      <Button>Hello from ui-react</Button>
+    <main className="flex min-h-svh flex-col bg-background px-6 py-12 text-foreground">
+      <div className="my-auto w-full">
+        <StatusScreen
+          title="COMING SOON"
+          illustration={
+            <ComingSoonIllustration aria-hidden="true" focusable="false" />
+          }
+          subtitle={"Something awesome is in the works.\nCome back soon!"}
+        />
+      </div>
     </main>
   );
 }
