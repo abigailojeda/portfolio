@@ -68,7 +68,7 @@ The design document records current styling gaps for separate iterations.
   do not constitute the planned foundational theming feature.
 - `packages/ui-vue` and `packages/ui-angular` do not exist. Cross-framework runtime
   integration, equivalent components, and shared-theme behavior remain unbuilt.
-- The React library currently has Button, StatusScreen, and SegmentedControl and consumes workspace source.
+- The React library currently has Button, StatusScreen, SegmentedControl, and Switch and consumes workspace source.
   Independent distribution and consumption outside the portfolio have not been
   established. All existing packages are private; publication is not configured.
 - `packages/ui-react/src/index.ts` repeats the Button export. This existing
@@ -83,6 +83,18 @@ The design document records current styling gaps for separate iterations.
 - No existing project documentation or repository AI instructions were found
   before these documents were added. Accessibility and responsive behavior remain
   requirements to verify per feature, not a completed project-wide audit.
+
+### Reusable binary Switch
+
+`packages/ui-react` also exports `Switch`, `SwitchProps`, and `SwitchState`.
+It is a controlled native checkbox with switch semantics, configurable state
+labels/icons, three presentations, disabled behavior, an optional opaque accent,
+and a sliding highlight. It consumes shared light/dark tokens and contains no
+application state or theme-selection logic. `Components/Switch` documents the
+supported API and interactive examples using the existing preview color modes.
+Focused library tests cover controlled updates, callbacks, keyboard interaction,
+disabled states, accessible naming, icon presentations, and independent instances.
+See the [design and implementation plan](superpowers/plans/2026-10-24-switch.md).
 
 ## Planned functionality
 

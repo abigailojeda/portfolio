@@ -192,6 +192,36 @@ theme prop, provider, selector, persistence, or new shared theme implementation.
 See the [implementation plan](../superpowers/plans/2026-10-24-segmented-control.md)
 for verification evidence and any remaining browser limitations.
 
+### Switch
+
+`packages/ui-react` exports the controlled binary `Switch`, `SwitchProps`, and
+`SwitchState`. `checked` and `onCheckedChange` belong to the consumer; the
+component uses one native checkbox with `role="switch"`. Clicking anywhere
+toggles, Tab enters/leaves, and Space toggles using native browser behavior.
+Provide exactly one stable `aria-label` or `aria-labelledby`; both visual state
+contents are decorative to assistive technology.
+
+`uncheckedState` and `checkedState` supply nonempty text labels and optional
+ReactNode icons. `presentation` selects text (default), icon-text, or icon-only;
+icon-only requires both icons through the public type. Supply noninteractive
+icons using `currentColor`. No icon library, theme logic, persistence, or
+application state is included.
+
+An outlined rounded surface, equal-width positions, and a sliding highlight
+reuse the SegmentedControl visual language and semantic tokens. Labels wrap
+inside constrained widths. Native disabled behavior retains selection; subtle
+hover and disabled appearance stay in the library. Keyboard focus uses a
+component-local foreground border and 1px box-shadow, without a prominent outline.
+Transitions respect reduced motion. The optional opaque absolute `color` accent
+uses the same feature-detected CSS contrast/mixing contract and semantic fallback
+as SegmentedControl. Shared light/dark scopes work unchanged; visual-style themes
+remain deferred.
+
+`Components/Switch` documents text, icon-text, icon-only, disabled, light/dark,
+custom color, and constrained-width examples. Default covers text-only usage;
+there is no duplicate TextOnly story. The Preview color mode control follows
+the existing Storybook-only convention.
+
 ### Shared scrollbar foundation
 
 `packages/design-tokens/src/scrollbars.css` is imported once by the shared CSS
