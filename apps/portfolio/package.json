@@ -9,6 +9,7 @@
     "preview": "vite preview"
   },
   "dependencies": {
+    "@heroicons/react": "^2.2.0",
     "@portfolio/design-tokens": "workspace:^",
     "@portfolio/ui-react": "workspace:^",
     "react": "^19.2.8",

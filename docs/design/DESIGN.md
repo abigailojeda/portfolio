@@ -209,7 +209,9 @@ application state is included.
 
 An outlined rounded surface, equal-width positions, and a sliding highlight
 reuse the SegmentedControl visual language and semantic tokens. Labels wrap
-inside constrained widths. Native disabled behavior retains selection; subtle
+inside constrained widths. Icon-only positions are 44px squares, keeping the
+rounded-full moving highlight circular inside the pill track. Native disabled
+behavior retains selection; subtle
 hover and disabled appearance stay in the library. Keyboard focus uses a
 component-local foreground border and 1px box-shadow, without a prominent outline.
 Transitions respect reduced motion. The optional opaque absolute `color` accent
@@ -265,7 +267,43 @@ retain native styling. OS overlay-scrollbar preferences can still govern when a
 scrollbar is displayed. Storybook's tool-owned manager is outside the project
 preview stylesheet; its own scrollbars are not overridden.
 
+### Portfolio Navbar and LandingPage
+
+`App` now renders the app-owned `LandingPage` with one `Navbar` and one placeholder
+main landmark. Navbar displays ABIGAIL OJEDA, shared simple NavLinks for Home,
+Journey, Stack, and Contact, and the app-owned ColorModeSwitch wrapper around
+the shared icon-only Switch. The URL fragment
+determines `aria-current`, with Home used when no fragment is present. Native
+hash changes update selection, including browser history navigation; there is
+no separate current-link state. Links target placeholders for later content. There is
+no hero, router, scrollspy, or mobile-menu implementation in this iteration.
+
+Navbar uses semantic background/border translucency and backdrop blur locally.
+This does not introduce the deferred shared Glass visual style or restyle the
+library components. Desktop links are centered; small screens retain the name
+and Switch on the first row and wrap links on a second row. Native library focus
+indicators remain unchanged. ColorModeSwitch passes Heroicons SunIcon/MoonIcon
+from the 24px outline set through Switch's existing state-icon props. Heroicons is a dependency
+of `apps/portfolio` only; no custom icon markup is duplicated.
+
+ColorModeSwitch uses its private, colocated `useColorMode` hook for the minimal
+session-only color-mode wiring. The hook respects an
+explicit root `data-theme` or follows the initial/live system preference until
+the user chooses a mode. Explicit choices set the existing root `data-theme`
+attribute; media listeners are cleaned up. No theme provider, shared theme API,
+new tokens, or persistence was added. Future persistence remains deferred.
+
+Navbar renders `<ColorModeSwitch />` without theme props; LandingPage renders
+`<Navbar />` and owns page composition only. The hook is not exported through a
+barrel or the shared UI library. Existing initialization, root scope, listeners,
+appearance, and behavior are preserved by this responsibility extraction.
+See the [approved refactor plan](../superpowers/plans/2026-10-25-color-mode-switch-refactor.md).
+
 ### Status page
+
+The following status-page description and verification are historical. The
+StatusScreen and ComingSoonIllustration implementations remain available; the
+active app entry now renders LandingPage as described above.
 
 The initial status page is minimal, modern, friendly, and slightly playful.
 The [light](mockups/maintenance/maintenance_light_mode_mockup.png) and
