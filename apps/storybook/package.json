@@ -1,0 +1,28 @@
+{
+  "name": "@portfolio/storybook",
+  "private": true,
+  "version": "0.0.0",
+  "type": "module",
+  "scripts": {
+    "dev": "storybook dev -p 6006",
+    "build": "tsc -b && storybook build",
+    "typecheck": "tsc -b"
+  },
+  "dependencies": {
+    "@portfolio/design-tokens": "workspace:^",
+    "@portfolio/ui-react": "workspace:^",
+    "react": "^19.2.8",
+    "react-dom": "^19.2.8"
+  },
+  "devDependencies": {
+    "@storybook/react-vite": "^10.6.3",
+    "@tailwindcss/vite": "^4.3.3",
+    "@types/node": "^24.13.3",
+    "@types/react": "^19.2.18",
+    "@types/react-dom": "^19.2.4",
+    "storybook": "^10.6.3",
+    "tailwindcss": "^4.3.3",
+    "typescript": "~6.0.2",
+    "vite": "^8.2.2"
+  }
+}

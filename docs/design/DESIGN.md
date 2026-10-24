@@ -1,9 +1,122 @@
 # Design decisions
 
-This document records the implemented status page and its confirmed design
-choices. The [specification](../specs/001-status-screen/spec.md) was approved
-on 2026-10-19; the user subsequently requested its implementation without commits.
-Verification limits are recorded below alongside the evidence.
+This document records the monorepo's styling conventions and implemented design
+decisions. The conventions below were requested by the user on 2026-10-24.
+The status page's [specification](../specs/001-status-screen/spec.md) was approved
+on 2026-10-19; its design details and dated verification evidence follow the
+conventions. Historical verification does not establish coverage for later work.
+
+## Styling and Design System conventions
+
+### Ownership
+
+| Location                 | Responsibility                                                                                                                                                                                                                   |
+| ------------------------ | -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `packages/design-tokens` | Shared colors, typography, spacing, border radii, and themes. Define framework-independent CSS custom properties; keep the existing Tailwind `@theme inline` mapping in `src/tailwind.css` as a separate adapter.                |
+| `packages/ui-react`      | Reusable React components and their encapsulated styling. Expose genuinely reusable visual options through typed props when required. Components consume shared foundations and must not depend on portfolio pages or Storybook. |
+| `apps/portfolio`         | Portfolio-specific composition, page/section layout, content, and styles that belong exclusively to those pages or sections.                                                                                                     |
+| `apps/storybook`         | Documentation and examples consuming real library exports and shared foundations. Storybook is not the source of component styling or token values.                                                                              |
+
+These are ownership rules, not instructions to create every category now.
+The token package currently defines semantic colors and light/dark themes.
+Typography, spacing, and radii currently use Tailwind's existing default scales.
+Keep those defaults until actual shared design requirements justify project
+tokens; then define their values once in `packages/design-tokens` and map them
+for Tailwind consumption. One-off illustration proportions and page geometry do
+not become shared tokens merely because they are numeric values.
+
+### Choosing and locating styles
+
+- Prefer Tailwind utilities directly in components for layout, spacing,
+  flex/grid, alignment, responsiveness, and simple visual styling. Semantic
+  utilities such as `bg-primary`, `text-foreground`, and `fill-blob-back` consume
+  the shared token mapping; do not repeat palette literals in consumers.
+- Keep a reusable component's visual styling inside that component. If a
+  required appearance is a reusable variant, make it a typed prop implemented
+  by the component rather than copying its markup or styling in a page. Use
+  complete Tailwind class names for the supported cases. Add neither variants
+  nor a variant-management dependency speculatively.
+- When custom CSS is needed, colocate its stylesheet with the component and
+  import it there. Scope selectors to that component. Utility-only components
+  do not need an extra stylesheet. Keep page/section-only CSS within the owning
+  page or section; do not move it into the UI library or a global stylesheet.
+- Global stylesheets are entry points for token/theme imports, Tailwind setup,
+  source scanning, and minimal document defaults. Do not accumulate unrelated
+  component classes there. Avoid global selectors that change another
+  component's internals.
+- Reuse an existing component or token when its responsibility fits. Do not
+  extract a component, CSS class, or shared configuration solely because two
+  utility lists look alike. Apply KISS, DRY, and SOLID according to an actual
+  responsibility, and add no dependency without demonstrated need.
+- Preserve current appearance, interaction, theme scoping, accessibility, and
+  responsive behavior when organizing styles. A conventions update is not
+  authorization for a broad CSS refactor or a new Design System API.
+
+### Storybook and shared styling
+
+The existing [React Storybook](../../apps/storybook/README.md) imports components
+from `@portfolio/ui-react`. Its preview imports `src/styles.css`, which loads
+`@portfolio/design-tokens`, the shared Tailwind adapter, and Tailwind itself.
+The Vite configuration uses the Tailwind plugin, and `@source` includes the
+library's source so its utilities are generated. The library also imports its
+own style entry. Keep this source-consumption contract working; no prebuilt
+library is required for Storybook development.
+
+Keep component-specific styles with their components, not in stories or preview
+CSS. The preview's token-based body background/foreground are document defaults.
+Do not duplicate theme values, component implementations, or app styles just to
+make a story match the application.
+
+Use typed stories for reusable components' supported variants, states, and usage
+examples as their actual APIs evolve. Document foundations where that helps
+consumers understand or use an existing foundation; do not create unused tokens
+to populate documentation. Today Button has Default and Disabled stories with
+native prop controls; it has no visual variant, size, or loading API. Additional
+component/foundation coverage is future work. This Storybook remains React-only;
+Vue and Angular will have separate Storybooks, with no Composition added here.
+
+### Existing gaps and follow-up work
+
+The inspection on 2026-10-24 identified the following; this iteration changes
+documentation only and does not resolve them through visual or API changes:
+
+- Button's dark primary background (`#8b7cff`) and white text compute to 3.27:1
+  contrast, below this project's 4.5:1 normal-text target. The light pair computes
+  to 4.54:1. Review the dark primary text/background pairing in a design iteration.
+- Button has no explicit hover, focus-visible, or disabled appearance. Its native
+  `className` prop replaces its default class list because props are spread after
+  `className`. Define the intended styling/variant contract before expanding its
+  API; keep native behavior and current appearance unchanged in this iteration.
+- Typography, spacing, and radius foundations have no project-owned token
+  definitions yet; components use Tailwind defaults. Evaluate shared requirements
+  before introducing tokens. The status page's current sizes are documented
+  below; this update corrects outdated prose without changing those sizes.
+- Library and application/Storybook CSS entries each initialize Tailwind. The
+  static Storybook build currently emits overlapping utility/preflight content
+  in its preview and library CSS assets. Review CSS delivery when defining the
+  library's distribution contract; do not remove required imports or scanning
+  without validating consumers.
+- The dark palette is repeated for explicit themes and system preference in the
+  token package. Future consolidation must preserve explicit and nested theme
+  precedence and system fallback.
+- Storybook currently documents only Button; StatusScreen and existing
+  foundations have no stories. Add useful coverage as those APIs and foundations
+  are reviewed, without inventing new components or variants.
+
+### Conventions verification — 2026-10-24
+
+This update changes development documentation and agent instructions only.
+No source, styling, configuration, or dependency change was needed to establish
+the conventions. `pnpm check` passed formatting, lint, type checking, all 12
+tests across four files, and the React library, portfolio, and Storybook builds.
+`git diff --check` passed. Storybook retained its existing preview chunk-size
+warning.
+
+The running Storybook reloaded the imported Button with shared dark primary,
+foreground, and canvas colors and no browser console errors. The available
+browser has no system-color emulation; native light-mode and live system
+switching were not retested. Existing theme/browser verification limits below
+remain applicable.
 
 ## Design philosophy
 
@@ -12,6 +125,39 @@ The [light](mockups/maintenance/maintenance_light_mode_mockup.png) and
 [dark](mockups/maintenance/maintenance_dark_mode_mockup.png) mockups guide colors,
 composition, proportions, and typography. Responsive reflow takes priority over
 fixed mockup measurements. Their presentation margins are not a viewport frame.
+
+## Planned theming architecture
+
+The planned system has two independent customization dimensions:
+
+- **Color mode:** light and dark.
+- **Visual style:** minimal and glass initially, with more styles possible later.
+
+Every combination must be supported: minimal-light, minimal-dark, glass-light,
+and glass-dark. These names describe combinations, not proposed API values or
+selectors. Each framework's UI library serves all combinations through the same
+components; do not duplicate libraries or component implementations per theme.
+
+Framework-independent foundations and shared theme values belong in
+`packages/design-tokens`. Component styling and behavior belong in each
+framework's UI library. When theming is implemented, shared components must
+consume semantic tokens and adapt through their library-owned styling to the
+selected visual style. Consumers must not need to add appearance-specific CSS
+classes manually. Component-specific variants remain separate from these theme
+dimensions; this direction does not require a theme prop on every component.
+Applications and Storybook consume the shared definitions without copying theme
+values or recreating component appearance rules.
+
+Preserve the existing `data-theme="light"` / `data-theme="dark"` behavior,
+including system fallback and nearest explicit theme precedence. Do not overload
+those values with visual styles or combined names. The final selection API,
+style selectors, token coverage, composition mechanism, and any provider needs
+remain undecided until a focused theming specification is approved.
+
+This direction refines the overview's [progressive customization](../project-overview.md#progressive-customization).
+The agreed future `localStorage` choice for the initial color-mode preference
+remains intact. This documentation adds no themes, selectors, tokens, or runtime
+behavior; the current light/dark implementation is described below.
 
 ## Semantic colors and themes
 
@@ -44,10 +190,10 @@ This feature adds no toggle, provider, or storage. The agreed future
 
 ## Typography
 
-The existing Tailwind sans-serif stack is unchanged. The heading uses
-`text-3xl sm:text-4xl leading-tight font-bold`: 30px below 640px, 36px from
+The existing Tailwind sans-serif stack is unchanged. The current heading uses
+`text-4xl sm:text-6xl leading-tight font-bold`: 36px below 640px, 60px from
 640px, weight 700, and 1.25 line height. The subtitle uses
-`text-base leading-5`: 16px with 20px line height. Both inherit `foreground`.
+`text-lg leading-5`: 18px with 20px line height. Both inherit `foreground`.
 `whitespace-pre-line` preserves actual subtitle newlines alongside automatic
 wrapping; `wrap-anywhere` on both text elements also breaks long unbroken words.
 There is no HTML parsing, truncation, line clamp, or fallback copy.

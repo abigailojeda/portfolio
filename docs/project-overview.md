@@ -37,11 +37,27 @@ authoritative in the referenced configuration files.
 | Compilation and styling | The app's `vite.config.ts` configures React, Tailwind CSS v4, and React Compiler through the Babel preset. `src/index.css` imports shared tokens and their Tailwind mapping and scans React library sources.                                                                                                                  |
 | Design tokens           | `packages/design-tokens` exports CSS and a Tailwind mapping. Semantic color variables cover background, foreground, surface, primary, muted, and border roles. The global status palette includes blob roles. Unoverridden roots follow the system with light fallback; nearest explicit `data-theme` scopes take precedence. |
 | React library           | `packages/ui-react` exports Button and the typed reusable StatusScreen with decorative shapes. Its Vite library build emits ES modules and externalizes React runtimes; package exports currently point to TypeScript source. Library styles use the shared Tailwind mapping.                                                 |
+| Storybook               | `apps/storybook`: React-only Storybook with TypeScript and Vite, consuming the React library and shared tokens directly. Button stories document its existing default/disabled states and native props. Root `storybook` and `build-storybook` scripts run and build it; lint, type checks, and root build include the app.   |
 | Tests                   | Root `vitest.config.ts` defines app and React library projects using jsdom. `test/setup.ts` installs jest-dom matchers and cleanup. React Testing Library tests cover Button, StatusScreen semantics/content, inline SVG geometry/props, and app composition.                                                                 |
 | Static checks           | Root `eslint.config.js` targets app/library TypeScript with React Hooks rules and app React Refresh rules. Each project has TypeScript app/node configurations. Prettier scripts and `.prettierignore` exist; no dedicated Prettier configuration is present.                                                                 |
 | Commit conventions      | Husky runs formatting, lint, type checks, and tests before commits; commit-msg uses Conventional Commits validation. Commitizen is configured in root `package.json`.                                                                                                                                                         |
 | CI                      | `.github/workflows/ci.yml` handles pushes and pull requests targeting `dev` and `main`, with frozen-lockfile installation, dependency audit, formatting, lint, type checks, tests, and build.                                                                                                                                 |
 | Releases                | After quality checks, pushes to `main` trigger release-it through `release:ci`. `.release-it.js` configures Conventional Commit versioning, formatted changelogs, release commits/tags, atomic pushes, and GitHub Releases; npm publishing is disabled. See [Release workflow](releases.md).                                  |
+
+## Styling and Design System conventions
+
+Follow the [styling and Design System conventions](design/DESIGN.md#styling-and-design-system-conventions)
+and [agent instructions](../AGENTS.md#styling-and-design-system). Shared
+foundations belong in `packages/design-tokens`, reusable React presentation in
+`packages/ui-react`, and page/section-specific styling in `apps/portfolio`.
+Prefer component-local Tailwind utilities, colocate necessary custom CSS, and
+keep global CSS minimal. Storybook documents actual library APIs and consumes
+the shared styling without copying component or theme definitions.
+
+Current custom tokens cover colors and themes; typography, spacing, and radii
+still use Tailwind defaults. The conventions establish ownership for future
+requirements without adding speculative tokens or changing existing visuals.
+The design document records current styling gaps for separate iterations.
 
 ## Gaps and discrepancies with the intended architecture
 
