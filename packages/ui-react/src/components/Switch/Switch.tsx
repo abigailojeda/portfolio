@@ -90,7 +90,7 @@ export function Switch({
             <span
               key={index}
               data-active={active ? "" : undefined}
-              className={`switch-state relative row-start-1 flex min-h-11 min-w-0 items-center justify-center gap-2 rounded-full px-4 py-2 text-center wrap-anywhere transition-colors duration-150 motion-reduce:transition-none ${index === 0 ? "col-start-1" : "col-start-2"} ${active ? "font-medium text-background" : "text-muted-foreground"}`}
+              className={`switch-state relative row-start-1 flex min-h-11 min-w-0 items-center justify-center gap-2 rounded-full text-center wrap-anywhere transition-colors duration-150 motion-reduce:transition-none ${presentation === "icon" ? "size-11" : "px-4 py-2"} ${index === 0 ? "col-start-1" : "col-start-2"} ${active ? "font-medium text-background" : "text-muted-foreground"}`}
             >
               {presentation !== "text" && state.icon != null && (
                 <span className="inline-flex size-5 shrink-0 items-center justify-center [&>svg]:size-full">

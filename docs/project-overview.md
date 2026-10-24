@@ -33,7 +33,7 @@ authoritative in the referenced configuration files.
 | Area                    | Current implementation and source of truth                                                                                                                                                                                                                                                                                                                                                        |
 | ----------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
 | Workspace               | Private pnpm monorepo; `pnpm-workspace.yaml` includes `apps/*` and `packages/*`. Root `package.json` provides shared scripts and tooling.                                                                                                                                                                                                                                                         |
-| Application             | `apps/portfolio`: React, TypeScript, and Vite. `src/App.tsx` composes the Coming Soon page from shared StatusScreen and an app-owned inline ComingSoonIllustration inside one main landmark. `src/main.tsx` uses React StrictMode.                                                                                                                                                                |
+| Application             | `apps/portfolio`: React, TypeScript, and Vite. `src/App.tsx` renders LandingPage with an app-owned Navbar, shared NavLink/Switch controls, Heroicons, and one placeholder main landmark. `src/main.tsx` uses React StrictMode.                                                                                                                                                                    |
 | Compilation and styling | The app's `vite.config.ts` configures React, Tailwind CSS v4, and React Compiler through the Babel preset. `src/index.css` imports shared tokens and their Tailwind mapping and scans React library sources.                                                                                                                                                                                      |
 | Design tokens           | `packages/design-tokens` exports shared theme CSS, global scrollbar foundations, and a Tailwind mapping. Semantic color variables cover background, foreground, surface, primary, muted, and border roles. The global status palette includes blob roles. Unoverridden roots follow the system with light fallback; nearest explicit `data-theme` scopes take precedence.                         |
 | React library           | `packages/ui-react` exports Button, the generic controlled SegmentedControl with optional opaque accents and mouse drag scrolling, and the typed reusable StatusScreen with decorative shapes. Its Vite library build emits ES modules and externalizes React runtimes; package exports currently point to TypeScript source. Library styles use the shared Tailwind mapping.                     |
@@ -61,11 +61,11 @@ The design document records current styling gaps for separate iterations.
 
 ## Gaps and discrepancies with the intended architecture
 
-- The app currently presents the Coming Soon status page. Landing-page sections, navigation,
-  internationalization, and the component explorer do not yet exist.
-- System-responsive light/dark tokens and explicit/nested theme scopes exist, but there is no application theme selection,
-  preference persistence, or implemented customization system. Token files alone
-  do not constitute the planned foundational theming feature.
+- The app presents the first LandingPage structure with navigation and an empty main container.
+  Full landing sections, internationalization, and the component explorer do not yet exist.
+- System-responsive light/dark tokens and explicit/nested theme scopes exist. LandingPage now
+  connects a session-only light/dark control to root data-theme. Preference persistence
+  and the broader customization system remain unimplemented.
 - `packages/ui-vue` and `packages/ui-angular` do not exist. Cross-framework runtime
   integration, equivalent components, and shared-theme behavior remain unbuilt.
 - The React library currently has Button, StatusScreen, SegmentedControl, and Switch and consumes workspace source.
@@ -104,7 +104,23 @@ required `href`, simple/underline variants, and current styling driven by
 underline. It consumes shared light/dark tokens and preserves standard
 anchor props and keyboard behavior. `Components/NavLink` documents interactive
 variants, current destinations, color modes, and constrained widths. There is no
-router dependency or portfolio navbar integration.
+router dependency; portfolio Navbar integration stays in `apps/portfolio`.
+
+### First portfolio page structure
+
+The app now renders an app-owned `LandingPage` and `Navbar`. Navbar uses library
+NavLink exports and an app-owned `ColorModeSwitch` that composes the library
+Switch, portfolio-only Heroicons, and a private `useColorMode` hook.
+The page includes one accessible placeholder main and fragment destinations for
+future sections. Session-only color-mode selection reuses the root `data-theme`
+contract and follows system changes until explicitly overridden; no persistence
+or shared theme provider exists. Header translucency/blur stays app-local rather
+than implementing the planned shared Glass style. Storybook remains focused on
+library components. See the [implementation plan](superpowers/plans/2026-10-25-navbar-landing-page.md).
+
+The [approved ownership refactor](superpowers/plans/2026-10-25-color-mode-switch-refactor.md)
+keeps theme logic inside ColorModeSwitch's private hook. LandingPage and Navbar
+no longer own or pass color-mode state. Existing behavior remains unchanged.
 
 ## Planned functionality
 
