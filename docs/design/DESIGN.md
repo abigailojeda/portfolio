@@ -52,21 +52,6 @@ not become shared tokens merely because they are numeric values.
   responsive behavior when organizing styles. A conventions update is not
   authorization for a broad CSS refactor or a new Design System API.
 
-### Focus styling
-
-Across React, Vue, and Angular, buttons, inputs, switches, and other interactive
-components should avoid default browser outlines and prominent CSS outline rings
-unless explicitly requested. Prefer subtle, custom-designed focus indicators
-that match the visual identity, using `:focus-visible` where appropriate to
-distinguish keyboard focus from ordinary pointer interactions. By default retain
-visible keyboard focus through accessible borders, box-shadows, or equivalent
-styling. Do not add a global `outline: none` reset without replacement indication.
-
-Explicit exception: the user subsequently requested no focus effect on
-SegmentedControl, only hover styling. Its native keyboard behavior remains, but
-it has no visible keyboard focus indicator. This is a visual accessibility gap,
-not a convention to copy into future components.
-
 ### Storybook and shared styling
 
 The existing [React Storybook](../../apps/storybook/README.md) imports components
@@ -87,9 +72,7 @@ examples as their actual APIs evolve. Document foundations where that helps
 consumers understand or use an existing foundation; do not create unused tokens
 to populate documentation. Today Button has Default and Disabled stories with
 native prop controls; it has no visual variant, size, or loading API. Additional
-foundation coverage is future work. SegmentedControl now has typed controlled
-stories for options, disabled states, callbacks, independent instances, dynamic
-changes, narrow widths, and shared light/dark modes. This Storybook remains React-only;
+component/foundation coverage is future work. This Storybook remains React-only;
 Vue and Angular will have separate Storybooks, with no Composition added here.
 
 ### Existing gaps and follow-up work
@@ -116,9 +99,9 @@ documentation only and does not resolve them through visual or API changes:
 - The dark palette is repeated for explicit themes and system preference in the
   token package. Future consolidation must preserve explicit and nested theme
   precedence and system fallback.
-- Storybook now documents Button, SegmentedControl, and shared scrollbars;
-  StatusScreen still has no stories. Add useful coverage as those APIs and
-  foundations are reviewed, without inventing new components or variants.
+- Storybook currently documents only Button; StatusScreen and existing
+  foundations have no stories. Add useful coverage as those APIs and foundations
+  are reviewed, without inventing new components or variants.
 
 ### Conventions verification — 2026-10-24
 
@@ -136,80 +119,6 @@ switching were not retested. Existing theme/browser verification limits below
 remain applicable.
 
 ## Design philosophy
-
-### SegmentedControl — 2026-10-24
-
-The [approved component design](../superpowers/specs/2026-10-24-segmented-control-design.md)
-defines a generic controlled single-selection component, independent of portfolio
-navigation or theme persistence. The reference screenshot informs its outlined
-rounded track and inset selected pill only; option counts, values, and callbacks
-are entirely supplied by each consumer.
-
-Native radio inputs own selection semantics and keyboard navigation. Browser
-inspection demonstrated that removing a focused radio drops
-focus to the page body; a local recovery step selects a focus target (without
-changing selection) only after removal/disabling. At 320px, native arrow focus
-also left a long-label segment partly clipped. A nearest-aligned `scrollIntoView`
-on focus addresses that browser-verified gap. The approved extension adds local
-primary-mouse drag scrolling only when overflow exists, using a 6px threshold,
-native pointer capture, and suppression of the drag's click. There are no custom
-keyboard handlers, roving tabindex, global scroll listeners, or gesture library;
-touch input keeps native panning.
-
-The approved readability refactor keeps generic pointer handling in the internal
-`useHorizontalDragScroll` hook and radio recovery/reveal in the component-local
-`useRadioGroupFocus` hook. A bubbling group focus handler refreshes a pending
-drag's scroll baseline after the input reveals itself. The hooks have no public
-exports, configuration layer, or application-specific behavior. Selection,
-callback dispatch, public types, and rendering remain in SegmentedControl.
-
-Component-owned Tailwind styles consume existing semantic tokens. The selected
-segment inverts foreground/background; the track uses surface and border roles,
-and unselected text uses muted foreground. Segment height is at least 44px;
-horizontal overflow stays within the control, and long labels can wrap. Selected,
-hover, and disabled appearance stay in the library without consumer appearance
-classes or added palette values.
-
-The optional `color` prop accepts opaque absolute CSS accents. Colocated component
-CSS uses custom properties, native `contrast-color()` for selected text, and
-`color-mix()` for hover states. Focus-specific visual styling was removed at the
-user's explicit request; hover remains independent of keyboard focus.
-Custom accents are guarded by CSS feature detection;
-unsupported engines and omitted colors retain the original semantic pair.
-Transparency, CSS-variable colors, JavaScript color resolution, and color libraries
-are outside the approved scope. Actual contrast must be measured, not inferred
-from feature detection alone.
-
-Regular stories expose a Storybook-only Preview color mode control using an
-inherited shared `data-theme` scope; the argument is never forwarded to the
-component. Fixed side-by-side and nested comparisons remain useful independently
-of that control. The SingleOption story was removed; the component still supports
-single options without imposing a minimum.
-
-Light/dark Storybook scopes use the actual shared themes. Glass appearance and
-the visual-style selection mechanism remain deferred; this component adds no
-theme prop, provider, selector, persistence, or new shared theme implementation.
-See the [implementation plan](../superpowers/plans/2026-10-24-segmented-control.md)
-for verification evidence and any remaining browser limitations.
-
-### Shared scrollbar foundation
-
-`packages/design-tokens/src/scrollbars.css` is imported once by the shared CSS
-entry point already consumed by the portfolio and Storybook previews. It applies
-to ordinary overflow regions and UI components, with no component-specific copies.
-Track, thumb, thumb hover, and inset shading use the existing semantic surface,
-muted foreground, foreground, and border roles respectively, so nested shared
-Light/Dark scopes adapt without new palettes.
-
-The standards path uses `scrollbar-width: thin` and `scrollbar-color`; engines
-supporting WebKit scrollbar pseudo-elements use a mutually exclusive 8px vertical
-and 5px horizontal path. Native scrollbar visibility and scrolling remain intact.
-Firefox/platform thickness and hover capabilities may differ; forced-color modes
-retain native styling. OS overlay-scrollbar preferences can still govern when a
-scrollbar is displayed. Storybook's tool-owned manager is outside the project
-preview stylesheet; its own scrollbars are not overridden.
-
-### Status page
 
 The initial status page is minimal, modern, friendly, and slightly playful.
 The [light](mockups/maintenance/maintenance_light_mode_mockup.png) and

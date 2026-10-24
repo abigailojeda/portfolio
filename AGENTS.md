@@ -26,20 +26,6 @@ implemented requirements.
 - Ask for clarification when a decision materially affects architecture or
   expected behavior. Never silently change an approved architectural decision.
 
-## Code readability
-
-- Prefer readability over compressed code across React, Vue, Angular, TypeScript,
-  components, and tests. Separate functions and logical blocks with blank lines.
-- Keep functions small, focused, and clearly named. Always use braces around
-  conditionals, including early returns; prefer guard clauses to deep nesting.
-- Use named handlers for meaningful event logic. Keep rendering separate from
-  complex behavior, extracting hooks or utilities only when a clear responsibility
-  justifies them, using each framework's idioms.
-- Organize tests by behavior and responsibility; use small setup helpers where
-  they reduce meaningful duplication without adding testing infrastructure.
-- Apply KISS and SOLID/DRY pragmatically; avoid speculative abstractions and
-  unnecessary layers. Add short English comments only for non-obvious intent.
-
 ## Styling and Design System
 
 Follow the [styling conventions](docs/design/DESIGN.md#styling-and-design-system-conventions).
@@ -62,14 +48,6 @@ Follow the [styling conventions](docs/design/DESIGN.md#styling-and-design-system
 - Keep global CSS limited to shared foundations, Tailwind setup, and minimal
   document defaults. Reuse existing tokens/components; similar utility lists
   alone do not justify a reusable abstraction or dependency.
-- Across React, Vue, and Angular, avoid default browser outlines and prominent
-  CSS outline rings on interactive components unless explicitly requested.
-  Prefer subtle, custom focus indicators that match the visual identity, using
-  `:focus-visible` where appropriate to distinguish keyboard focus from pointer
-  interactions. By default preserve visible keyboard focus with accessible borders,
-  box-shadows, or equivalent styling; never add a global `outline: none` reset
-  without replacement focus indication. Document explicit component-specific
-  exceptions; SegmentedControl currently has no focus effect at the user's request.
 - Document reusable components, supported variants, states, and usage in the
   React Storybook; add foundation documentation where useful. Consume actual
   library exports and shared styles, preserving the existing source scanning.
