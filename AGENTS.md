@@ -26,6 +26,35 @@ implemented requirements.
 - Ask for clarification when a decision materially affects architecture or
   expected behavior. Never silently change an approved architectural decision.
 
+## Styling and Design System
+
+Follow the [styling conventions](docs/design/DESIGN.md#styling-and-design-system-conventions).
+
+- Keep shared colors, typography, spacing, border radii, and themes in
+  `packages/design-tokens`. Token definitions must stay framework-independent;
+  keep Tailwind-specific mappings in the existing adapter.
+- Keep reusable UI and its styling in `packages/ui-react`. Expose required,
+  reusable visual variants through typed props instead of restyling copies in
+  consumers. Do not invent components, variants, or tokens without a use case.
+- Follow the [planned theming architecture](docs/design/DESIGN.md#planned-theming-architecture):
+  color mode (light/dark) and visual style (minimal/glass initially) are independent.
+  Components must adapt through semantic tokens and framework-owned styling,
+  without manual consumer appearance classes or duplicated UI libraries. Preserve
+  existing `data-theme` light/dark behavior; leave the final theme API to its
+  approved specification.
+- Prefer Tailwind utilities in components for layout, spacing, flex/grid,
+  alignment, and simple styling. Keep necessary custom CSS beside its component;
+  keep page/section-only CSS with that page or section in `apps/portfolio`.
+- Keep global CSS limited to shared foundations, Tailwind setup, and minimal
+  document defaults. Reuse existing tokens/components; similar utility lists
+  alone do not justify a reusable abstraction or dependency.
+- Document reusable components, supported variants, states, and usage in the
+  React Storybook; add foundation documentation where useful. Consume actual
+  library exports and shared styles, preserving the existing source scanning.
+- Preserve appearance, behavior, accessibility, and responsive layouts. Follow
+  the documented current gaps without silently expanding the Design System or
+  undertaking a broad CSS refactor.
+
 ## Codex, Superpowers, and specification-driven development
 
 - Follow installed Superpowers skills and their documented workflows where
