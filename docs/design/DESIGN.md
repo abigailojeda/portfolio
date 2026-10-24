@@ -222,6 +222,32 @@ custom color, and constrained-width examples. Default covers text-only usage;
 there is no duplicate TextOnly story. The Preview color mode control follows
 the existing Storybook-only convention.
 
+### NavLink
+
+`packages/ui-react` exports `NavLink` and `NavLinkProps`. The component is a native
+anchor with required `href`, standard anchor props, and a `variant` of `simple`
+(default) or `underline`. Native `aria-current` is the single source of current
+appearance: omitted or false is inactive; use `page` for a current page and
+`location` for a current section. Consumers own destination selection and supply
+meaningful content or an accessible name. No router or selection state is included.
+
+Simple links use muted text at rest and foreground text on hover/current.
+Underline links also reserve an absolute underline: subdued on hover and solid
+when current, without changing dimensions. Text weight stays stable. Both variants
+wrap long labels, consume semantic light/dark tokens, and use a subtle 1px
+foreground box-shadow for keyboard focus. Transitions respect reduced motion.
+Consumers own surrounding navigation layout; `className` augments base classes.
+The optional CSS `color` accent applies to hover/current text and the underline
+through `currentColor`. Omit it to retain semantic defaults. Inactive text and
+the semantic keyboard-focus shadow remain unchanged; consumers choose an accent
+with readable contrast against the surrounding theme. Standard `style` props
+are preserved, and removing the accent restores the semantic color.
+
+`Components/NavLink` documents both variants, current/inactive states, custom
+color, interactive light/dark comparisons, and constrained widths. The Preview color mode control
+follows the existing Storybook convention. Story-only click handlers prevent
+navigation and select example destinations; the library preserves native anchors.
+
 ### Shared scrollbar foundation
 
 `packages/design-tokens/src/scrollbars.css` is imported once by the shared CSS

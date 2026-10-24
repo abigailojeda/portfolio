@@ -96,6 +96,16 @@ Focused library tests cover controlled updates, callbacks, keyboard interaction,
 disabled states, accessible naming, icon presentations, and independent instances.
 See the [design and implementation plan](superpowers/plans/2026-10-24-switch.md).
 
+### Reusable navigation link
+
+`packages/ui-react` exports `NavLink` and `NavLinkProps`: a native anchor with
+required `href`, simple/underline variants, and current styling driven by
+`aria-current`, plus an optional CSS `color` accent for hover/current text and
+underline. It consumes shared light/dark tokens and preserves standard
+anchor props and keyboard behavior. `Components/NavLink` documents interactive
+variants, current destinations, color modes, and constrained widths. There is no
+router dependency or portfolio navbar integration.
+
 ## Planned functionality
 
 ### Portfolio and unified showcase
