@@ -207,3 +207,16 @@ changes to approved architecture.
 This is a provisional direction, not a rigid schedule. Refine dependencies and
 priorities during future specifications; do not pre-specify the entire roadmap.
 See [AGENTS.md](../AGENTS.md) for operational development and verification rules.
+
+### Extended reusable Button
+
+The existing Button supports filled, outlined, bottom-border, and text variants;
+optional start/end icons; native anchor rendering with `href`; CSS radius and
+opaque accent customization; and normal/zero padding. Native buttons default to
+`type="button"`, with explicit submit/reset support and disabled styling. It has
+subtle keyboard focus and reduced-motion handling. Icon-only usage requires a
+consumer-supplied accessible name. Native CSS color functions provide gentle
+hover lightening and contrasting filled text, with semantic fallbacks in
+unsupported engines. Storybook covers variants, icon-only content, padding, customization,
+and light/dark states. See the [Button plan](superpowers/plans/2026-10-25-button.md)
+and [design contract](design/DESIGN.md#reusable-button).
