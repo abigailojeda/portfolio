@@ -85,8 +85,9 @@ make a story match the application.
 Use typed stories for reusable components' supported variants, states, and usage
 examples as their actual APIs evolve. Document foundations where that helps
 consumers understand or use an existing foundation; do not create unused tokens
-to populate documentation. Today Button has Default and Disabled stories with
-native prop controls; it has no visual variant, size, or loading API. Additional
+to populate documentation. Button documents four appearance variants, icons,
+native buttons/links, customization, states, and shared light/dark modes. It has
+no size or loading API. Additional
 foundation coverage is future work. SegmentedControl now has typed controlled
 stories for options, disabled states, callbacks, independent instances, dynamic
 changes, narrow widths, and shared light/dark modes. This Storybook remains React-only;
@@ -94,16 +95,13 @@ Vue and Angular will have separate Storybooks, with no Composition added here.
 
 ### Existing gaps and follow-up work
 
-The inspection on 2026-10-24 identified the following; this iteration changes
-documentation only and does not resolve them through visual or API changes:
+The documentation-only inspection on 2026-10-24 identified the following gaps.
+Later Button work resolves its relevant items as recorded below; the remaining
+foundation gaps stay open:
 
-- Button's dark primary background (`#8b7cff`) and white text compute to 3.27:1
-  contrast, below this project's 4.5:1 normal-text target. The light pair computes
-  to 4.54:1. Review the dark primary text/background pairing in a design iteration.
-- Button has no explicit hover, focus-visible, or disabled appearance. Its native
-  `className` prop replaces its default class list because props are spread after
-  `className`. Define the intended styling/variant contract before expanding its
-  API; keep native behavior and current appearance unchanged in this iteration.
+- Button's former dark primary/white contrast gap and missing interaction styling
+  are addressed by the reusable Button iteration described below. Other consumers
+  of primary/primary-foreground still need their own contrast verification.
 - Typography, spacing, and radius foundations have no project-owned token
   definitions yet; components use Tailwind defaults. Evaluate shared requirements
   before introducing tokens. The status page's current sizes are documented
@@ -531,3 +529,64 @@ on 2026-10-19 without commits.
 
 Significant future design-system changes must update this document with the
 decision, its rationale, and its effect on existing consumers.
+
+### Reusable Button
+
+Button evolves the existing component with `filled` (default), `outlined`,
+`bottom-border`, and `text` variants. Optional `icon: ReactNode` and
+`iconPosition: "start" | "end"` support text, icon/text, and icon-only content.
+Icons are decorative; consumers supply currentColor-based SVGs and must name
+icon-only controls with `aria-label` or `aria-labelledby`. This requirement is
+not enforced with additional content unions.
+
+An `href`-discriminated union forwards native button or anchor attributes and
+correctly typed events. Buttons default to `type="button"`; explicit submit and
+reset remain supported. No existing consumer depended on implicit submission.
+Disabled is button-only; anchors preserve native navigation and link attributes.
+
+`radius` accepts CSS border-radius values, including numeric React pixel values;
+`padding` is `normal` (default) or `none`. Default radius and spacing retain
+Tailwind scales. Optional `paddingX` (`CSSProperties["paddingInline"]`) and
+`paddingY` (`CSSProperties["paddingBlock"]`) independently override the preset's
+horizontal and vertical padding, including zero values, on buttons, links, and
+icon-only controls. Numeric values use React's pixel convention; CSS strings
+retain their units. Explicit axis props override the corresponding inline style
+values; omitted props preserve consumer styles and preset defaults.
+The `bottom-border` variant always has zero radius, including
+when a radius override is supplied; other variants retain CSS radius customization.
+Storybook offers labeled None/Small/Medium/Large/Pill presets without changing
+the component API. `className` extends component classes and `style` is preserved;
+explicit radius/color props take precedence over their corresponding overrides.
+
+The optional opaque absolute CSS `color` follows Switch/SegmentedControl's
+contract. It controls filled backgrounds or transparent-variant text/borders.
+With native `contrast-color()` and `color-mix()` support, filled text uses a
+contrasting black/white foreground for its actual background. Hover mixes the
+relevant color with 6% white; borders follow currentColor. This corrects Button's
+former dark contrast issue without changing shared primary tokens. Unsupported
+engines retain a semantic foreground/background filled pair and semantic
+transparent accents, with no custom accent or hover lightening. Transparency,
+CSS-variable colors, and automatic contrast correction for arbitrary transparent
+accents are unsupported; consumers must choose readable accents for their surface
+and hover state, including the distinguishability of borders or filled surfaces.
+Feature detection alone does not establish contrast. Example custom colors
+demonstrate suitable light/dark choices.
+
+Keyboard focus uses a subtle semantic box-shadow. Interactive buttons and anchors
+use a pointer cursor; disabled native buttons use the default cursor and suppress
+hover. Disabled text/icons use muted-foreground at full opacity; filled disabled
+buttons use muted backgrounds and a visible border, preserving legibility.
+Color transitions respect reduced motion. Styles
+remain colocated in the library; Storybook consumes real exports and shared theme
+scopes, with interactive hover/focus instructions and a light/dark comparison.
+A dedicated IconOnly story demonstrates named buttons through live args,
+including variant and disabled controls. The theme comparison forwards shared
+configuration to all four variants in both modes, including icon-only content.
+Filled, Outlined, BottomBorder, and Text stories render live args, including icon
+selection and independent axis-padding controls. BottomBorder hides radius;
+the Padding gallery demonstrates no padding, either axis, and both axes. Fixed
+galleries expose only controls they consume. Variant and radius choices are
+labeled radio controls, avoiding unreadable native select popups. Content and
+NativeLinks stories and form-type Controls are omitted at the user's request;
+the native component API is unchanged. There are no manager-wide select overrides.
+See the [approved design and plan](../superpowers/plans/2026-10-25-button.md).

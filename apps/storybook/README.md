@@ -16,12 +16,28 @@ is required for development. Preview CSS imports `@portfolio/design-tokens` and
 its Tailwind mapping, and Vite compiles the shared library's utility classes.
 Canvas colors follow the shared tokens, including the system color preference.
 
-`Components/Button` contains Default and Disabled stories. Controls expose
-`children`, `disabled`, and native `type` options (`button`, `submit`, `reset`).
-Enabled clicks appear in the Actions panel; disabled buttons retain native
-disabled behavior. The component currently has one visual style, with no
-variant, size, or loading API. The disabled story preserves its existing visual
-appearance as well as its behavior.
+`Components/Button` has independent Filled, Outlined, BottomBorder, and Text
+stories whose Controls update the real component. Color, labeled CSS radius
+presets, text, icon selection/position, and disabled state are
+editable. Radius is hidden for bottom-border, which always stays square.
+`padding` retains normal/none presets; `paddingX` and `paddingY` accept independent
+CSS values (for example `0`, `24px`, or `1rem`). Clear either field to restore its
+preset default. The public API also accepts numeric pixel values.
+
+Padding demonstrates no padding, horizontal only, vertical only, and both axes.
+IconOnly and Disabled use the same live-args rendering as appearance stories.
+Padding and ThemesAndStates forward shared customization to their actual buttons;
+only controls for intentionally fixed content, spacing, or theme scopes are hidden.
+Content and NativeLinks stories and the native form `type` control are omitted.
+Preview color mode
+uses the real shared light/dark tokens. Custom colors require consumer contrast
+checks against the surrounding surface, including hover and meaningful borders.
+Enabled clicks appear in the Actions panel. There is no size or loading API.
+
+Button variant and radius choices use labeled radio controls, keeping every
+option visible without the native select popups that rendered unreadably in the
+desktop browser. No manager-wide select overrides are applied. Native button and
+link semantics remain supported by the component API and library tests.
 
 This app configures React only. Vue and Angular Storybooks and Design System
 expansion are separate future work.

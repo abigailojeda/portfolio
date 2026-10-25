@@ -1,0 +1,59 @@
+.ui-button {
+  --button-accent: var(--ds-color-foreground);
+  color: var(--button-accent);
+  background-color: transparent;
+  border: 0 solid currentColor;
+}
+
+/* Preserve readable text and icons instead of fading the entire control. */
+.ui-button:disabled {
+  color: var(--ds-color-muted-foreground);
+}
+
+.ui-button[data-variant="filled"]:disabled {
+  background-color: var(--ds-color-muted);
+  color: var(--ds-color-muted-foreground);
+  border-width: 1px;
+}
+
+.ui-button[data-variant="filled"] {
+  background-color: var(--button-accent);
+  color: var(--ds-color-background);
+}
+
+.ui-button[data-variant="outlined"] {
+  border-width: 1px;
+}
+
+.ui-button[data-variant="bottom-border"] {
+  border-bottom-width: 1px;
+}
+
+.ui-button:focus-visible {
+  box-shadow:
+    0 0 0 1px var(--ds-color-background),
+    0 0 0 2px var(--ds-color-foreground);
+}
+
+/* Keep the readable semantic pair when native color functions are unavailable. */
+@supports (color: contrast-color(red)) and
+  (background-color: color-mix(in srgb, red, white)) {
+  .ui-button[data-variant="filled"] {
+    --button-accent: var(--ds-color-primary);
+    background-color: var(--button-accent);
+    color: contrast-color(var(--button-accent));
+  }
+
+  .ui-button[data-custom-color] {
+    --button-accent: var(--button-color);
+  }
+
+  .ui-button:not(:disabled):hover {
+    color: color-mix(in srgb, var(--button-accent) 94%, white);
+  }
+
+  .ui-button[data-variant="filled"]:not(:disabled):hover {
+    background-color: color-mix(in srgb, var(--button-accent) 94%, white);
+    color: contrast-color(color-mix(in srgb, var(--button-accent) 94%, white));
+  }
+}
