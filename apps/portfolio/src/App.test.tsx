@@ -12,7 +12,7 @@ describe("App", () => {
     expect(screen.getAllByRole("heading", { level: 1 })).toHaveLength(1);
     expect(
       within(screen.getByRole("main")).getByRole("heading", {
-        name: "Abigail Ojeda — portfolio",
+        name: "Abigail Ojeda Frontend developer",
         level: 1,
       }),
     ).toBeInTheDocument();

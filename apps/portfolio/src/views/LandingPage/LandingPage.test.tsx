@@ -4,7 +4,7 @@ import { describe, expect, it } from "vitest";
 import { LandingPage } from "./LandingPage";
 
 describe("LandingPage", () => {
-  it("provides a real target for each navigation link without adding landing content", () => {
+  it("provides a real target for each navigation link", () => {
     render(<LandingPage />);
 
     for (const link of screen.getAllByRole("link")) {
@@ -16,5 +16,13 @@ describe("LandingPage", () => {
 
     expect(screen.getByRole("main")).toHaveAttribute("id", "home");
     expect(screen.getAllByRole("heading")).toHaveLength(1);
+  });
+
+  it("links the hero call to action to the journey target", () => {
+    render(<LandingPage />);
+
+    expect(
+      screen.getByRole("link", { name: "Explore my journey" }),
+    ).toHaveAttribute("href", "#journey");
   });
 });
