@@ -2,7 +2,7 @@
 
 This document records the monorepo's styling conventions and implemented design
 decisions. The conventions below were requested by the user on 2026-10-24.
-The status page's [specification](../specs/001-status-screen/spec.md) was approved
+The status page's [specification](../superpowers/specs/2026-10-19-status-screen-design.md) was approved
 on 2026-10-19; its design details and dated verification evidence follow the
 conventions. Historical verification does not establish coverage for later work.
 
@@ -267,14 +267,22 @@ preview stylesheet; its own scrollbars are not overridden.
 
 ### Portfolio Navbar and LandingPage
 
-`App` now renders the app-owned `LandingPage` with one `Navbar` and one placeholder
-main landmark. Navbar displays ABIGAIL OJEDA, shared simple NavLinks for Home,
+`App` now renders the app-owned `LandingPage` with one `Navbar` and a main
+landmark containing `Hero`. Navbar displays ABIGAIL OJEDA, shared simple NavLinks for Home,
 Journey, Stack, and Contact, and the app-owned ColorModeSwitch wrapper around
 the shared icon-only Switch. The URL fragment
 determines `aria-current`, with Home used when no fragment is present. Native
 hash changes update selection, including browser history navigation; there is
 no separate current-link state. Links target placeholders for later content. There is
-no hero, router, scrollspy, or mobile-menu implementation in this iteration.
+no router, scrollspy, or mobile-menu implementation in this iteration.
+
+Hero fills the available screen beneath Navbar, scaling the supplied illustration
+above the portfolio-owned Title and the shared bottom-border Button linking to the
+journey placeholder. Title supports heading levels h1–h3 and hero/section sizes;
+its large, blurred pink glow moves slowly across the first quarter of the title
+and respects reduced motion. The Hero uses Alice from Google
+Fonts for “developer.” Text and background use the existing theme tokens. See the
+[Hero design and plan](../superpowers/specs/2026-10-31-hero-design.md).
 
 Navbar uses semantic background/border translucency and backdrop blur locally.
 This does not introduce the deferred shared Glass visual style or restyle the

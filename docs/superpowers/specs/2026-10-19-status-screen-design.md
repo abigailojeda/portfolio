@@ -28,8 +28,8 @@ source and configuration, not completed feature behavior:
 
 - The private pnpm workspace contains `apps/portfolio`, `packages/ui-react`, and
   `packages/design-tokens`. No existing specification directory, SDD template,
-  or SDD tooling was found. This feature uses lightweight Markdown at the
-  requested `docs/specs/001-status-screen/spec.md` location.
+  or SDD tooling was found. This feature uses a lightweight Markdown
+  specification, originally created at the requested `docs/specs/` location.
 - The app uses React 19, TypeScript, Vite 8, Tailwind CSS 4, and React Compiler.
   `App.tsx` currently renders a `main`, a Portfolio heading, and the shared Button.
 - The React library exports a Button and consumes shared Tailwind token mappings.
