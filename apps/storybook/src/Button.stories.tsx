@@ -10,6 +10,7 @@ type StoryArgs = Extract<ButtonProps, { href?: never }> & {
 function ArrowIcon() {
   return (
     <svg
+      className="translate-y-px"
       viewBox="0 0 24 24"
       fill="none"
       stroke="currentColor"
@@ -143,6 +144,15 @@ export const Filled: Story = { args: { variant: "filled" } };
 export const Outlined: Story = { args: { variant: "outlined" } };
 export const BottomBorder: Story = {
   args: { variant: "bottom-border", padding: "none" },
+};
+export const BottomBorderWithIcon: Story = {
+  name: "Bottom Border & Icon",
+  args: {
+    variant: "bottom-border",
+    padding: "none",
+    icon: "arrow",
+    iconPosition: "end",
+  },
 };
 export const Text: Story = { args: { variant: "text" } };
 export const Disabled: Story = { args: { disabled: true } };
