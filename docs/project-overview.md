@@ -108,9 +108,10 @@ router dependency; portfolio Navbar integration stays in `apps/portfolio`.
 
 ### First portfolio page structure
 
-The app now renders an app-owned `LandingPage` and `Navbar`. Navbar uses library
-NavLink exports and an app-owned `ColorModeSwitch` that composes the library
-Switch, portfolio-only Heroicons, and a private `useColorMode` hook.
+The app now renders an app-owned `LandingPage` and `Navbar`. The user temporarily
+commented out Navbar navigation and its related tests; their code is retained
+for restoration. Branding and an app-owned `ColorModeSwitch` remain visible. The latter composes the library
+Switch, portfolio-only Heroicons, and `src/hooks/useColorMode`.
 The page includes a Hero in its main landmark and fragment destinations for
 future sections. Session-only color-mode selection reuses the root `data-theme`
 contract and follows system changes until explicitly overridden; no persistence
@@ -119,8 +120,17 @@ than implementing the planned shared Glass style. Storybook remains focused on
 library components. See the [implementation plan](superpowers/plans/2026-10-25-navbar-landing-page.md).
 
 The [approved ownership refactor](superpowers/plans/2026-10-25-color-mode-switch-refactor.md)
-keeps theme logic inside ColorModeSwitch's private hook. LandingPage and Navbar
-no longer own or pass color-mode state. Existing behavior remains unchanged.
+keeps theme logic out of Navbar and LandingPage. Hooks now live in `src/hooks`
+under the user's component/hook organization convention; behavior is unchanged.
+
+The [Hero redesign](superpowers/specs/2026-11-01-hero-redesign.md) adds a responsive
+typographic introduction, contact/download links, live experience hours, and a
+Joy Machine with transient decorative emoji bursts. Its hover and entrance
+animations are CSS-driven and respect reduced motion. The app owns this UI and
+its small state hooks. Contact controls reuse the shared Button's native anchor
+API and semantic neutral/muted tones; the user's temporary Navbar edit is
+preserved. The real
+CV is served from `apps/portfolio/public/cv/abigail-ojeda-cv.pdf`.
 
 ## Planned functionality
 
