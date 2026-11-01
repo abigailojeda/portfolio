@@ -1,28 +1,39 @@
-import { render, screen } from "@testing-library/react";
+import { render, screen, within } from "@testing-library/react";
 import { describe, expect, it } from "vitest";
 
 import { LandingPage } from "./LandingPage";
 
 describe("LandingPage", () => {
-  it("provides a real target for each navigation link", () => {
+  it("provides the home landmark and a single level-one heading", () => {
     render(<LandingPage />);
 
-    for (const link of screen.getAllByRole("link")) {
+    /* Temporarily disabled while Navbar navigation is commented out.
+    const navigation = screen.getByRole("navigation", {
+      name: "Main navigation",
+    });
+
+    for (const link of within(navigation).getAllByRole("link")) {
       const href = link.getAttribute("href");
 
       expect(href).toMatch(/^#/);
       expect(document.getElementById(href!.slice(1))).toBeInTheDocument();
     }
+    */
 
     expect(screen.getByRole("main")).toHaveAttribute("id", "home");
-    expect(screen.getAllByRole("heading")).toHaveLength(1);
+    expect(screen.getAllByRole("heading", { level: 1 })).toHaveLength(1);
   });
 
-  it("links the hero call to action to the journey target", () => {
+  it("presents the introduction and Joy Machine inside the main landmark", () => {
     render(<LandingPage />);
 
+    const main = within(screen.getByRole("main"));
+
     expect(
-      screen.getByRole("link", { name: "Explore my journey" }),
-    ).toHaveAttribute("href", "#journey");
+      main.getByRole("heading", { name: "Abigail Ojeda", level: 1 }),
+    ).toBeInTheDocument();
+    expect(
+      main.getByRole("button", { name: "Give me joy!" }),
+    ).toBeInTheDocument();
   });
 });

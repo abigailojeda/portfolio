@@ -1,8 +1,24 @@
 .ui-button {
   --button-accent: var(--ds-color-foreground);
+  --button-filled-foreground: var(--ds-color-background);
   color: var(--button-accent);
   background-color: transparent;
   border: 0 solid currentColor;
+}
+
+.ui-button[data-variant="filled"][data-tone="muted"] {
+  --button-accent: var(--ds-color-muted);
+  --button-filled-foreground: var(--ds-color-foreground);
+}
+
+@supports (background-color: color-mix(in srgb, black, white)) {
+  .ui-button[data-variant="filled"][data-tone="muted"] {
+    --button-accent: color-mix(
+      in srgb,
+      var(--ds-color-background) 85%,
+      var(--ds-color-foreground)
+    );
+  }
 }
 
 /* Preserve readable text and icons instead of fading the entire control. */
@@ -18,7 +34,7 @@
 
 .ui-button[data-variant="filled"] {
   background-color: var(--button-accent);
-  color: var(--ds-color-background);
+  color: var(--button-filled-foreground);
 }
 
 .ui-button[data-variant="outlined"] {
@@ -39,12 +55,15 @@
 @supports (color: contrast-color(red)) and
   (background-color: color-mix(in srgb, red, white)) {
   .ui-button[data-variant="filled"] {
-    --button-accent: var(--ds-color-primary);
     background-color: var(--button-accent);
     color: contrast-color(var(--button-accent));
   }
 
-  .ui-button[data-custom-color] {
+  .ui-button[data-variant="filled"]:where([data-tone="primary"]) {
+    --button-accent: var(--ds-color-primary);
+  }
+
+  .ui-button[data-custom-color][data-variant] {
     --button-accent: var(--button-color);
   }
 

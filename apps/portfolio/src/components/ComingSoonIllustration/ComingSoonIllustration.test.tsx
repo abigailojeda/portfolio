@@ -9,7 +9,7 @@ import { ComingSoonIllustration } from "./ComingSoonIllustration";
 describe("ComingSoonIllustration", () => {
   it("preserves the original compound path and transparent cutouts", () => {
     const sourcePath =
-      "../../../../docs/design/artwork/rocket-laptop-editable.svg";
+      "../../../../../docs/design/artwork/rocket-laptop-editable.svg";
     const original = new DOMParser().parseFromString(
       readFileSync(new URL(sourcePath, import.meta.url), "utf8"),
       "image/svg+xml",

@@ -12,14 +12,16 @@ describe("App", () => {
     expect(screen.getAllByRole("heading", { level: 1 })).toHaveLength(1);
     expect(
       within(screen.getByRole("main")).getByRole("heading", {
-        name: "Abigail Ojeda Frontend developer",
+        name: "Abigail Ojeda",
         level: 1,
       }),
     ).toBeInTheDocument();
     expect(screen.getByRole("banner")).toBeInTheDocument();
+    /* Temporarily disabled while Navbar navigation is commented out.
     expect(
       screen.getByRole("navigation", { name: "Main navigation" }),
     ).toBeInTheDocument();
+    */
     expect(
       screen.getByRole("switch", { name: "Dark mode" }),
     ).toBeInTheDocument();

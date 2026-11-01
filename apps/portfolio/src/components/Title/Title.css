@@ -13,7 +13,7 @@
   }
 }
 
-.portfolio-title::before {
+.portfolio-title[data-size="section"]::before {
   position: absolute;
   z-index: -1;
   top: -4rem;
@@ -43,7 +43,7 @@
 }
 
 @media (prefers-reduced-motion: reduce) {
-  .portfolio-title::before {
+  .portfolio-title[data-size="section"]::before {
     animation: none;
   }
 }

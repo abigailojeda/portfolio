@@ -15,6 +15,7 @@ export function buttonTypeChecks() {
   const link = (
     <Button
       href="/contact"
+      tone="neutral"
       onClick={(event) => {
         const element: HTMLAnchorElement = event.currentTarget;
         return element;
@@ -40,6 +41,8 @@ export function buttonTypeChecks() {
   );
   // @ts-expect-error Unsupported appearance.
   const variant = <Button variant="ghost">Save</Button>;
+  // @ts-expect-error Unsupported semantic tone.
+  const tone = <Button tone="danger">Save</Button>;
 
-  return [button, link, icon, disabledLink, linkForm, variant];
+  return [button, link, icon, disabledLink, linkForm, variant, tone];
 }
