@@ -41,13 +41,14 @@ const meta = {
     docs: {
       description: {
         component:
-          "A native button (default type=button), or a native anchor when href is supplied. Icon-only controls must supply aria-label or aria-labelledby. Icons should use currentColor. Custom colors accept opaque absolute CSS colors, matching Switch; unsupported browsers retain semantic defaults. Choose transparent-variant accents with sufficient contrast against their surface, including hover. Tab to inspect keyboard focus; hover to see gentle lightening. Transitions respect reduced motion.",
+          "A native button (default type=button), or a native anchor when href is supplied. Filled controls support primary (default), neutral, and muted semantic tones. Custom color overrides the tone where supported. Icon-only controls must supply aria-label or aria-labelledby. Icons should use currentColor. Custom colors accept opaque absolute CSS colors, matching Switch; unsupported browsers retain semantic defaults. Choose transparent-variant accents with sufficient contrast against their surface, including hover. Tab to inspect keyboard focus; hover to see gentle lightening. Transitions respect reduced motion.",
       },
     },
     controls: {
       include: [
         "children",
         "variant",
+        "tone",
         "disabled",
         "icon",
         "iconPosition",
@@ -63,6 +64,13 @@ const meta = {
   argTypes: {
     children: { control: "text" },
     variant: { control: "inline-radio", options: variants },
+    tone: {
+      if: { arg: "variant", eq: "filled" },
+      control: "inline-radio",
+      options: ["primary", "neutral", "muted"],
+      description:
+        "Semantic palette for filled controls; transparent variants are unchanged.",
+    },
     disabled: { control: "boolean" },
     iconPosition: {
       if: { arg: "icon", neq: "none" },
@@ -115,6 +123,7 @@ const meta = {
   args: {
     children: "Continue",
     variant: "filled",
+    tone: "primary",
     disabled: false,
     padding: "normal",
     radius: "0.5rem",
@@ -141,6 +150,8 @@ export default meta;
 type Story = StoryObj<typeof meta>;
 
 export const Filled: Story = { args: { variant: "filled" } };
+export const Neutral: Story = { args: { variant: "filled", tone: "neutral" } };
+export const Muted: Story = { args: { variant: "filled", tone: "muted" } };
 export const Outlined: Story = { args: { variant: "outlined" } };
 export const BottomBorder: Story = {
   args: { variant: "bottom-border", padding: "none" },

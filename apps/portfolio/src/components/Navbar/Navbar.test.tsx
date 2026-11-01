@@ -1,14 +1,19 @@
-import { act, render, screen, waitFor, within } from "@testing-library/react";
-import userEvent from "@testing-library/user-event";
-import { afterEach, describe, expect, it } from "vitest";
+import { render, screen } from "@testing-library/react";
+// import { act, waitFor, within } from "@testing-library/react";
+// import userEvent from "@testing-library/user-event";
+import { describe, expect, it } from "vitest";
+// import { afterEach } from "vitest";
 
 import { Navbar } from "./Navbar";
 
+/* Temporarily disabled with Navbar navigation; restore with the navigation tests.
 afterEach(() => {
   window.history.replaceState(null, "", window.location.pathname);
 });
+*/
 
 describe("Navbar", () => {
+  /* Temporarily disabled while Navbar navigation is commented out.
   it("marks the clicked fragment as current instead of keeping Home active", async () => {
     const user = userEvent.setup();
     render(<Navbar />);
@@ -52,15 +57,19 @@ describe("Navbar", () => {
       "aria-current",
     );
   });
+  */
 
-  it("composes branding, native destinations, and an accessible icon-only theme control", () => {
+  it("composes branding and an accessible icon-only theme control", () => {
     const { container } = render(<Navbar />);
+    /* Restore with Navbar navigation.
     const navigation = within(
       screen.getByRole("navigation", { name: "Main navigation" }),
     );
+    */
 
     expect(screen.getByText("ABIGAIL OJEDA")).toBeVisible();
 
+    /* Restore with Navbar navigation.
     for (const [label, href] of [
       ["Home", "#home"],
       ["Journey", "#journey"],
@@ -77,6 +86,7 @@ describe("Navbar", () => {
       "aria-current",
       "location",
     );
+    */
     expect(screen.getByRole("switch", { name: "Dark mode" })).not.toBeChecked();
     expect(screen.queryByText("Light")).not.toBeInTheDocument();
     expect(screen.queryByText("Dark")).not.toBeInTheDocument();

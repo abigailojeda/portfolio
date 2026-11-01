@@ -79,6 +79,11 @@ Follow the [styling conventions](docs/design/DESIGN.md#styling-and-design-system
 
 ## Codex, Superpowers, and specification-driven development
 
+- Keep permanent design specifications in `docs/superpowers/specs/` and
+  implementation plans in `docs/superpowers/plans/`. A concise combined plan
+  is sufficient for small changes; separate documents are not required.
+- Keep `.superpowers/` as an entirely Git-ignored local execution workspace.
+  `docs/design/` holds design guidelines and mockups.
 - Follow installed Superpowers skills and their documented workflows where
   applicable; these instructions complement them rather than replace them.
 - For nontrivial functionality: understand the request and inspect existing

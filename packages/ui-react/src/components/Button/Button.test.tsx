@@ -5,6 +5,22 @@ import { describe, expect, it, vi } from "vitest";
 import { Button } from "./Button";
 
 describe("Button", () => {
+  it.each(["neutral", "muted"] as const)(
+    "supports the %s tone on native links without leaking the prop",
+    (tone) => {
+      render(
+        <Button href="/contact" tone={tone}>
+          Contact
+        </Button>,
+      );
+
+      const link = screen.getByRole("link", { name: "Contact" });
+      expect(link).toHaveAttribute("href", "/contact");
+      expect(link).toHaveAttribute("data-tone", tone);
+      expect(link).not.toHaveAttribute("tone");
+    },
+  );
+
   it("renders its content", () => {
     render(<Button>Continue</Button>);
 

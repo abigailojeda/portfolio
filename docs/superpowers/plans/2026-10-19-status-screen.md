@@ -8,7 +8,7 @@
 
 **Tech Stack:** Existing React 19, TypeScript, Vite 8, React Compiler, Tailwind CSS 4, pnpm, Vitest, React Testing Library, and jsdom.
 
-**Spec:** [Approved StatusScreen specification](../../specs/001-status-screen/spec.md), approved 2026-10-19. Read it alongside [design decisions](../../design/DESIGN.md).
+**Spec:** [Approved StatusScreen specification](../specs/2026-10-19-status-screen-design.md), approved 2026-10-19. Read it alongside [design decisions](../../design/DESIGN.md).
 
 **Status:** User authorized native execution on 2026-10-19 without commits.
 Implementation, `pnpm check`, and a fresh read-only code review are complete.

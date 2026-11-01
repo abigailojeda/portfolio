@@ -10,6 +10,9 @@ storybook-static/
 # Testing
 coverage/
 
+# Superpowers execution workspace
+.superpowers/
+
 # Environment
 .env
 .env.*

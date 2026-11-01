@@ -33,7 +33,7 @@ authoritative in the referenced configuration files.
 | Area                    | Current implementation and source of truth                                                                                                                                                                                                                                                                                                                                                        |
 | ----------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
 | Workspace               | Private pnpm monorepo; `pnpm-workspace.yaml` includes `apps/*` and `packages/*`. Root `package.json` provides shared scripts and tooling.                                                                                                                                                                                                                                                         |
-| Application             | `apps/portfolio`: React, TypeScript, and Vite. `src/App.tsx` renders LandingPage with an app-owned Navbar, shared NavLink/Switch controls, Heroicons, and one placeholder main landmark. `src/main.tsx` uses React StrictMode.                                                                                                                                                                    |
+| Application             | `apps/portfolio`: React, TypeScript, and Vite. `src/App.tsx` renders LandingPage with an app-owned Navbar and Hero, shared UI controls, and Heroicons. `src/main.tsx` uses React StrictMode.                                                                                                                                                                                                      |
 | Compilation and styling | The app's `vite.config.ts` configures React, Tailwind CSS v4, and React Compiler through the Babel preset. `src/index.css` imports shared tokens and their Tailwind mapping and scans React library sources.                                                                                                                                                                                      |
 | Design tokens           | `packages/design-tokens` exports shared theme CSS, global scrollbar foundations, and a Tailwind mapping. Semantic color variables cover background, foreground, surface, primary, muted, and border roles. The global status palette includes blob roles. Unoverridden roots follow the system with light fallback; nearest explicit `data-theme` scopes take precedence.                         |
 | React library           | `packages/ui-react` exports Button, the generic controlled SegmentedControl with optional opaque accents and mouse drag scrolling, and the typed reusable StatusScreen with decorative shapes. Its Vite library build emits ES modules and externalizes React runtimes; package exports currently point to TypeScript source. Library styles use the shared Tailwind mapping.                     |
@@ -61,8 +61,8 @@ The design document records current styling gaps for separate iterations.
 
 ## Gaps and discrepancies with the intended architecture
 
-- The app presents the first LandingPage structure with navigation and an empty main container.
-  Full landing sections, internationalization, and the component explorer do not yet exist.
+- The app presents a LandingPage with navigation and Hero. The remaining landing
+  sections, internationalization, and the component explorer do not yet exist.
 - System-responsive light/dark tokens and explicit/nested theme scopes exist. LandingPage now
   connects a session-only light/dark control to root data-theme. Preference persistence
   and the broader customization system remain unimplemented.
@@ -108,10 +108,11 @@ router dependency; portfolio Navbar integration stays in `apps/portfolio`.
 
 ### First portfolio page structure
 
-The app now renders an app-owned `LandingPage` and `Navbar`. Navbar uses library
-NavLink exports and an app-owned `ColorModeSwitch` that composes the library
-Switch, portfolio-only Heroicons, and a private `useColorMode` hook.
-The page includes one accessible placeholder main and fragment destinations for
+The app now renders an app-owned `LandingPage` and `Navbar`. The user temporarily
+commented out Navbar navigation and its related tests; their code is retained
+for restoration. Branding and an app-owned `ColorModeSwitch` remain visible. The latter composes the library
+Switch, portfolio-only Heroicons, and `src/hooks/useColorMode`.
+The page includes a Hero in its main landmark and fragment destinations for
 future sections. Session-only color-mode selection reuses the root `data-theme`
 contract and follows system changes until explicitly overridden; no persistence
 or shared theme provider exists. Header translucency/blur stays app-local rather
@@ -119,14 +120,23 @@ than implementing the planned shared Glass style. Storybook remains focused on
 library components. See the [implementation plan](superpowers/plans/2026-10-25-navbar-landing-page.md).
 
 The [approved ownership refactor](superpowers/plans/2026-10-25-color-mode-switch-refactor.md)
-keeps theme logic inside ColorModeSwitch's private hook. LandingPage and Navbar
-no longer own or pass color-mode state. Existing behavior remains unchanged.
+keeps theme logic out of Navbar and LandingPage. Hooks now live in `src/hooks`
+under the user's component/hook organization convention; behavior is unchanged.
+
+The [Hero redesign](superpowers/specs/2026-11-01-hero-redesign.md) adds a responsive
+typographic introduction, contact/download links, live experience hours, and a
+Joy Machine with transient decorative emoji bursts. Its hover and entrance
+animations are CSS-driven and respect reduced motion. The app owns this UI and
+its small state hooks. Contact controls reuse the shared Button's native anchor
+API and semantic neutral/muted tones; the user's temporary Navbar edit is
+preserved. The real
+CV is served from `apps/portfolio/public/cv/abigail-ojeda-cv.pdf`.
 
 ## Planned functionality
 
 ### Portfolio and unified showcase
 
-The landing page will include Hero, About Me, professional experience, technical
+The landing page will include About Me, professional experience, technical
 skills, projects, contact information, navigation, and relevant supporting UI.
 
 The unified showcase will support browsing components, selecting their native

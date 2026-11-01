@@ -2,7 +2,7 @@
 
 This document records the monorepo's styling conventions and implemented design
 decisions. The conventions below were requested by the user on 2026-10-24.
-The status page's [specification](../specs/001-status-screen/spec.md) was approved
+The status page's [specification](../superpowers/specs/2026-10-19-status-screen-design.md) was approved
 on 2026-10-19; its design details and dated verification evidence follow the
 conventions. Historical verification does not establish coverage for later work.
 
@@ -267,24 +267,55 @@ preview stylesheet; its own scrollbars are not overridden.
 
 ### Portfolio Navbar and LandingPage
 
-`App` now renders the app-owned `LandingPage` with one `Navbar` and one placeholder
-main landmark. Navbar displays ABIGAIL OJEDA, shared simple NavLinks for Home,
-Journey, Stack, and Contact, and the app-owned ColorModeSwitch wrapper around
-the shared icon-only Switch. The URL fragment
-determines `aria-current`, with Home used when no fragment is present. Native
-hash changes update selection, including browser history navigation; there is
-no separate current-link state. Links target placeholders for later content. There is
-no hero, router, scrollspy, or mobile-menu implementation in this iteration.
+`App` now renders the app-owned `LandingPage` with one `Navbar` and a main
+landmark containing `Hero`. Navbar currently displays ABIGAIL OJEDA and the
+app-owned ColorModeSwitch wrapper around the shared icon-only Switch. The user
+temporarily commented out the navigation links and hash-selection code. Related
+navigation tests and assertions are also commented out, with their code retained
+for restoration. Main/heading, branding, theme-control, and Hero coverage remain
+active. Fragment destinations remain available for future restoration. There is
+no router, scrollspy, or mobile-menu implementation in this iteration.
+
+Hero now uses the [approved two-column redesign](../superpowers/specs/2026-11-01-hero-redesign.md),
+with a stacked name, semantic red accent underline, greeting pill, contact links,
+live experience hours, and a Joy Machine card. Title retains its heading-level
+and size API; its hero size is bold sans-serif without the former glow, while the
+section size retains its existing appearance. The unused Alice font request was
+removed. Left-column supporting copy and contacts use compact sizes, with a thin
+angled underline matching the correction reference. The user's temporary Navbar
+edit is preserved.
+
+The pill and card have separate stable hover containers, with default rotations
+of -8 and +10 degrees. CSS transitions straighten each independently. Focus does
+not control rotation, so mouse leave restores tilt even after clicking the button.
+One-time entrance animations run on separate
+wrappers. At narrow widths the card is fluid and stacks after the introduction,
+with room for its rotated corners and hard offset shadow.
+
+Contact links and the Joy Machine action use the shared Button, preserving native
+anchor/button semantics. Filled neutral and muted tones use semantic colors;
+LinkedIn uses the mixed neutral surface. The shared
+accent role (`--ds-color-accent`, mapped to Tailwind `accent`) is #FF4B55 in light
+mode and #FF7078 in dark mode. Existing token values and theme selection are
+preserved. Existing Button variants and default appearance are preserved.
+
+`useJoyMachine` appends short-lived decorative emoji bursts and cleans up each
+burst independently, including pending timers on unmount. Rendering stays in
+JoyMachine; distributed, staggered, non-intercepting emojis (including pink hearts
+and no rainbows) float upward, or fade in place under
+reduced motion. Reduced motion also omits entrance travel and hover transitions.
+The experience interval updates every second from 1 October 2020 at midnight in
+Madrid, with cleanup on unmount and no live announcements. The real CV uses the
+deployment BASE_URL and a meaningful download filename.
 
 Navbar uses semantic background/border translucency and backdrop blur locally.
 This does not introduce the deferred shared Glass visual style or restyle the
-library components. Desktop links are centered; small screens retain the name
-and Switch on the first row and wrap links on a second row. Native library focus
-indicators remain unchanged. ColorModeSwitch passes Heroicons SunIcon/MoonIcon
+library components. The current header uses a flex row for the name and Switch.
+Native library focus indicators remain unchanged. ColorModeSwitch passes Heroicons SunIcon/MoonIcon
 from the 24px outline set through Switch's existing state-icon props. Heroicons is a dependency
 of `apps/portfolio` only; no custom icon markup is duplicated.
 
-ColorModeSwitch uses its private, colocated `useColorMode` hook for the minimal
+ColorModeSwitch uses `src/hooks/useColorMode` for the minimal
 session-only color-mode wiring. The hook respects an
 explicit root `data-theme` or follows the initial/live system preference until
 the user chooses a mode. Explicit choices set the existing root `data-theme`
@@ -557,6 +588,12 @@ when a radius override is supplied; other variants retain CSS radius customizati
 Storybook offers labeled None/Small/Medium/Large/Pill presets without changing
 the component API. `className` extends component classes and `style` is preserved;
 explicit radius/color props take precedence over their corresponding overrides.
+
+Filled Button controls also support `tone="primary"` (the unchanged default),
+`tone="neutral"` (foreground/background), and `tone="muted"` (a mixed neutral
+surface). Tones are owned by Button.css and adapt through existing semantic theme
+tokens. Transparent variants retain their existing styling; a supported explicit
+custom color overrides the tone. Storybook documents Neutral and Muted examples.
 
 The optional opaque absolute CSS `color` follows Switch/SegmentedControl's
 contract. It controls filled backgrounds or transparent-variant text/borders.

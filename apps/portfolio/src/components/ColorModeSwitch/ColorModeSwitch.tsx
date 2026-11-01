@@ -1,7 +1,7 @@
 import { MoonIcon, SunIcon } from "@heroicons/react/24/outline";
 import { Switch } from "@portfolio/ui-react";
 
-import { useColorMode } from "./useColorMode";
+import { useColorMode } from "../../hooks/useColorMode";
 
 export function ColorModeSwitch() {
   const { darkMode, onDarkModeChange } = useColorMode();
