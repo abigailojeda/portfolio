@@ -1,5 +1,17 @@
 # Changelog
 
+## [0.3.0](https://github.com/abigailojeda/portfolio/compare/v0.2.0...v0.3.0) (2026-11-01)
+
+### Features
+
+- add navlink component ([0f8e93a](https://github.com/abigailojeda/portfolio/commit/0f8e93aa314ae79a2f40789caf1db0532fd3f87a))
+- add toggle switcher component ([e3d4c65](https://github.com/abigailojeda/portfolio/commit/e3d4c6506604499ab1284729f5aa24c2c5639615))
+- enhance dependency security and add audit tests ([95458b8](https://github.com/abigailojeda/portfolio/commit/95458b89fe844477328bafac7d55bca3502915ff))
+- implement hero ([a6785b6](https://github.com/abigailojeda/portfolio/commit/a6785b6810ae0558c205b10510fb6706be0484ff))
+- implement hero in landing page ([75b018e](https://github.com/abigailojeda/portfolio/commit/75b018e18df11129f072919b8dc0ae023bde1735))
+- **portfolio:** add navbar, color mode control, and verification skill ([e914672](https://github.com/abigailojeda/portfolio/commit/e914672b214b19add466f2481cfbf101601cb629))
+- **ui-react:** extend Button variants and customization ([dbbb428](https://github.com/abigailojeda/portfolio/commit/dbbb4283a6dd820e1bb092a23684e7d543c928e0))
+
 ## 0.2.0 (2026-10-18)
 
 ### Features
