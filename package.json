@@ -47,7 +47,13 @@
   "pnpm": {
     "overrides": {
       "get-uri@8.0.1>basic-ftp": "6.2.3",
-      "release-it@21.1.1>undici": "7.30.1"
+      "release-it@21.1.1>undici": "7.30.1",
+      "minimatch@10.2.6": "11.0.3",
+      "@joshwooding/vite-plugin-react-docgen-typescript@0.7.0>glob": "14.0.3",
+      "commitizen@4.3.2>glob": "14.0.3"
+    },
+    "patchedDependencies": {
+      "commitizen@4.3.2": "patches/commitizen@4.3.2.patch"
     }
   },
   "config": {

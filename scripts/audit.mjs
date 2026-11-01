@@ -49,7 +49,14 @@ export function evaluateAudit(report, suppressions) {
       !Number.isInteger(counts[severity]) ||
       counts[severity] < 0 ||
       counts[severity] !==
-        advisories.filter((item) => item?.severity === severity).length
+        advisories.reduce(
+          (total, item) =>
+            total +
+            (item?.severity === severity && Array.isArray(item.findings)
+              ? item.findings.length
+              : 0),
+          0,
+        )
     ) {
       throw new Error("Audit severity totals do not match its advisories.");
     }
