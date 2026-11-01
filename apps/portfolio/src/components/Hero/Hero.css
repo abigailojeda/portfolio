@@ -1,0 +1,17 @@
+@media (prefers-reduced-motion: no-preference) {
+  .hero-enter {
+    animation: hero-enter 500ms ease-out both;
+  }
+}
+
+@keyframes hero-enter {
+  from {
+    opacity: 0;
+    transform: translateY(12px);
+  }
+
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}

@@ -1,0 +1,40 @@
+.ui-nav-link[aria-current]:not([aria-current="false"]) {
+  color: var(--nav-link-color, var(--ds-color-foreground));
+}
+
+.ui-nav-link:focus-visible {
+  box-shadow: 0 0 0 1px var(--ds-color-foreground);
+}
+
+.ui-nav-link[data-variant="underline"]::after {
+  content: "";
+  position: absolute;
+  inset-inline: 0;
+  bottom: 0.25rem;
+  height: 2px;
+  background-color: currentColor;
+  opacity: 0;
+  transition: opacity 150ms;
+}
+
+@media (hover: hover) {
+  .ui-nav-link:hover {
+    color: var(--nav-link-color, var(--ds-color-foreground));
+  }
+
+  .ui-nav-link[data-variant="underline"]:hover::after {
+    opacity: 0.35;
+  }
+}
+
+.ui-nav-link[data-variant="underline"][aria-current]:not(
+    [aria-current="false"]
+  )::after {
+  opacity: 1;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .ui-nav-link[data-variant="underline"]::after {
+    transition: none;
+  }
+}

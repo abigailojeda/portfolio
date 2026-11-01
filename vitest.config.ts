@@ -10,6 +10,12 @@ export default defineConfig({
     projects: [
       {
         test: {
+          name: "audit",
+          include: ["scripts/**/*.test.mjs"],
+        },
+      },
+      {
+        test: {
           ...sharedTestConfig,
           name: "portfolio",
           root: "./apps/portfolio",

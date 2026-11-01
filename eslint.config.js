@@ -12,6 +12,9 @@ const portfolioRoot = fileURLToPath(
 const uiReactRoot = fileURLToPath(
   new URL("./packages/ui-react/", import.meta.url),
 );
+const storybookRoot = fileURLToPath(
+  new URL("./apps/storybook/", import.meta.url),
+);
 
 export default defineConfig([
   globalIgnores([
@@ -48,6 +51,21 @@ export default defineConfig([
       globals: globals.browser,
       parserOptions: {
         tsconfigRootDir: uiReactRoot,
+      },
+    },
+  },
+
+  {
+    files: ["apps/storybook/**/*.{ts,tsx}"],
+    extends: [
+      js.configs.recommended,
+      tseslint.configs.recommended,
+      reactHooks.configs.flat.recommended,
+    ],
+    languageOptions: {
+      globals: { ...globals.browser, ...globals.node },
+      parserOptions: {
+        tsconfigRootDir: storybookRoot,
       },
     },
   },

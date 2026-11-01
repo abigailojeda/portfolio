@@ -1,6 +1,7 @@
 @theme inline {
   --color-background: var(--ds-color-background);
   --color-foreground: var(--ds-color-foreground);
+  --color-accent: var(--ds-color-accent);
 
   --color-blob-back: var(--ds-color-blob-back);
   --color-blob-front: var(--ds-color-blob-front);

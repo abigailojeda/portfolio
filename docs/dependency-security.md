@@ -37,6 +37,29 @@ Overrides are a last resort. Before removing one, remove only that entry in an
 isolated workspace, regenerate its lockfile, and inspect the controlling parent's
 exact snapshot. A secure top-level report alone is insufficient.
 
+### minimatch and glob
+
+- [GHSA-g3hv-75wg-m249](https://github.com/advisories/GHSA-g3hv-75wg-m249)
+  lists minimatch versions below 11.0.1 as affected by pattern amplification.
+  The lockfile selected 10.2.6 through ESLint, its config-array package, and
+  typescript-eslint. Their current releases still request minimatch 10. The
+  override selects 11.0.3 for the affected 10.2.6 resolution.
+- [GHSA-3g3m-2fjr-6pw4](https://github.com/advisories/GHSA-3g3m-2fjr-6pw4)
+  affects glob 9 through 14.0.1. Storybook's
+  `@joshwooding/vite-plugin-react-docgen-typescript@0.7.0` selected 13.0.6;
+  its latest published version still requests glob 13. Its scoped override
+  selects 14.0.3, which also selects minimatch 11.0.3.
+- Commitizen 4.3.2 pins glob 7.2.3, which selected minimatch 3.1.5. The
+  minimatch advisory lists that version as affected, although the described
+  optimization code was not found in the installed version. Overriding only
+  minimatch breaks glob 7; overriding Commitizen's glob to 14.0.3 requires the
+  small `patches/commitizen@4.3.2.patch` to support glob's named exports.
+  The compatibility test exercises Commitizen's parent-directory config search.
+- These are cross-major overrides, not guarantees of full compatibility. Node
+  24 satisfies the new packages' engine requirements. Recheck the lockfile and
+  remove each override when its parent selects a fixed version; remove the
+  Commitizen patch with its glob override when it is no longer needed.
+
 ### get-uri to basic-ftp
 
 - Override: `get-uri@8.0.1>basic-ftp` to `6.2.3`.

@@ -1,0 +1,24 @@
+.ui-switch input:focus-visible + .switch-track {
+  border-color: var(--ds-color-foreground);
+  box-shadow: 0 0 0 1px var(--ds-color-foreground);
+}
+
+/* Match SegmentedControl's accent contract and semantic fallback. */
+@supports (color: contrast-color(red)) and
+  (background-color: color-mix(in srgb, red, white)) {
+  .ui-switch[data-custom-color] .switch-thumb {
+    background-color: var(--switch-color);
+  }
+
+  .ui-switch[data-custom-color] .switch-state[data-active] {
+    color: contrast-color(var(--switch-color));
+  }
+
+  .ui-switch[data-custom-color] input:enabled:hover + .switch-track {
+    background-color: color-mix(
+      in srgb,
+      var(--switch-color) 12%,
+      var(--ds-color-surface)
+    );
+  }
+}

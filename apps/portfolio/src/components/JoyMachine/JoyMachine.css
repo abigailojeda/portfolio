@@ -1,0 +1,40 @@
+.joy-emoji {
+  animation: joy-float 1.8s ease-out both;
+}
+
+@keyframes joy-float {
+  0% {
+    opacity: 0;
+    transform: translate(calc(-50% + var(--joy-x)), var(--joy-y)) rotate(0deg);
+  }
+
+  15% {
+    opacity: 1;
+  }
+
+  100% {
+    opacity: 0;
+    transform: translate(
+        calc(-50% + var(--joy-x) + var(--joy-drift)),
+        calc(var(--joy-y) - var(--joy-rise))
+      )
+      rotate(var(--joy-rotation));
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .joy-emoji {
+    animation-name: joy-fade;
+    transform: translate(calc(-50% + var(--joy-x)), var(--joy-y));
+  }
+}
+
+@keyframes joy-fade {
+  from {
+    opacity: 1;
+  }
+
+  to {
+    opacity: 0;
+  }
+}

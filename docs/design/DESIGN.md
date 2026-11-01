@@ -1,17 +1,377 @@
 # Design decisions
 
-This document records the implemented status page and its confirmed design
-choices. The [specification](../specs/001-status-screen/spec.md) was approved
-on 2026-10-19; the user subsequently requested its implementation without commits.
-Verification limits are recorded below alongside the evidence.
+This document records the monorepo's styling conventions and implemented design
+decisions. The conventions below were requested by the user on 2026-10-24.
+The status page's [specification](../superpowers/specs/2026-10-19-status-screen-design.md) was approved
+on 2026-10-19; its design details and dated verification evidence follow the
+conventions. Historical verification does not establish coverage for later work.
+
+## Styling and Design System conventions
+
+### Ownership
+
+| Location                 | Responsibility                                                                                                                                                                                                                   |
+| ------------------------ | -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `packages/design-tokens` | Shared colors, typography, spacing, border radii, and themes. Define framework-independent CSS custom properties; keep the existing Tailwind `@theme inline` mapping in `src/tailwind.css` as a separate adapter.                |
+| `packages/ui-react`      | Reusable React components and their encapsulated styling. Expose genuinely reusable visual options through typed props when required. Components consume shared foundations and must not depend on portfolio pages or Storybook. |
+| `apps/portfolio`         | Portfolio-specific composition, page/section layout, content, and styles that belong exclusively to those pages or sections.                                                                                                     |
+| `apps/storybook`         | Documentation and examples consuming real library exports and shared foundations. Storybook is not the source of component styling or token values.                                                                              |
+
+These are ownership rules, not instructions to create every category now.
+The token package currently defines semantic colors and light/dark themes.
+Typography, spacing, and radii currently use Tailwind's existing default scales.
+Keep those defaults until actual shared design requirements justify project
+tokens; then define their values once in `packages/design-tokens` and map them
+for Tailwind consumption. One-off illustration proportions and page geometry do
+not become shared tokens merely because they are numeric values.
+
+### Choosing and locating styles
+
+- Prefer Tailwind utilities directly in components for layout, spacing,
+  flex/grid, alignment, responsiveness, and simple visual styling. Semantic
+  utilities such as `bg-primary`, `text-foreground`, and `fill-blob-back` consume
+  the shared token mapping; do not repeat palette literals in consumers.
+- Keep a reusable component's visual styling inside that component. If a
+  required appearance is a reusable variant, make it a typed prop implemented
+  by the component rather than copying its markup or styling in a page. Use
+  complete Tailwind class names for the supported cases. Add neither variants
+  nor a variant-management dependency speculatively.
+- When custom CSS is needed, colocate its stylesheet with the component and
+  import it there. Scope selectors to that component. Utility-only components
+  do not need an extra stylesheet. Keep page/section-only CSS within the owning
+  page or section; do not move it into the UI library or a global stylesheet.
+- Global stylesheets are entry points for token/theme imports, Tailwind setup,
+  source scanning, and minimal document defaults. Do not accumulate unrelated
+  component classes there. Avoid global selectors that change another
+  component's internals.
+- Reuse an existing component or token when its responsibility fits. Do not
+  extract a component, CSS class, or shared configuration solely because two
+  utility lists look alike. Apply KISS, DRY, and SOLID according to an actual
+  responsibility, and add no dependency without demonstrated need.
+- Preserve current appearance, interaction, theme scoping, accessibility, and
+  responsive behavior when organizing styles. A conventions update is not
+  authorization for a broad CSS refactor or a new Design System API.
+
+### Focus styling
+
+Across React, Vue, and Angular, buttons, inputs, switches, and other interactive
+components should avoid default browser outlines and prominent CSS outline rings
+unless explicitly requested. Prefer subtle, custom-designed focus indicators
+that match the visual identity, using `:focus-visible` where appropriate to
+distinguish keyboard focus from ordinary pointer interactions. By default retain
+visible keyboard focus through accessible borders, box-shadows, or equivalent
+styling. Do not add a global `outline: none` reset without replacement indication.
+
+Explicit exception: the user subsequently requested no focus effect on
+SegmentedControl, only hover styling. Its native keyboard behavior remains, but
+it has no visible keyboard focus indicator. This is a visual accessibility gap,
+not a convention to copy into future components.
+
+### Storybook and shared styling
+
+The existing [React Storybook](../../apps/storybook/README.md) imports components
+from `@portfolio/ui-react`. Its preview imports `src/styles.css`, which loads
+`@portfolio/design-tokens`, the shared Tailwind adapter, and Tailwind itself.
+The Vite configuration uses the Tailwind plugin, and `@source` includes the
+library's source so its utilities are generated. The library also imports its
+own style entry. Keep this source-consumption contract working; no prebuilt
+library is required for Storybook development.
+
+Keep component-specific styles with their components, not in stories or preview
+CSS. The preview's token-based body background/foreground are document defaults.
+Do not duplicate theme values, component implementations, or app styles just to
+make a story match the application.
+
+Use typed stories for reusable components' supported variants, states, and usage
+examples as their actual APIs evolve. Document foundations where that helps
+consumers understand or use an existing foundation; do not create unused tokens
+to populate documentation. Button documents four appearance variants, icons,
+native buttons/links, customization, states, and shared light/dark modes. It has
+no size or loading API. Additional
+foundation coverage is future work. SegmentedControl now has typed controlled
+stories for options, disabled states, callbacks, independent instances, dynamic
+changes, narrow widths, and shared light/dark modes. This Storybook remains React-only;
+Vue and Angular will have separate Storybooks, with no Composition added here.
+
+### Existing gaps and follow-up work
+
+The documentation-only inspection on 2026-10-24 identified the following gaps.
+Later Button work resolves its relevant items as recorded below; the remaining
+foundation gaps stay open:
+
+- Button's former dark primary/white contrast gap and missing interaction styling
+  are addressed by the reusable Button iteration described below. Other consumers
+  of primary/primary-foreground still need their own contrast verification.
+- Typography, spacing, and radius foundations have no project-owned token
+  definitions yet; components use Tailwind defaults. Evaluate shared requirements
+  before introducing tokens. The status page's current sizes are documented
+  below; this update corrects outdated prose without changing those sizes.
+- Library and application/Storybook CSS entries each initialize Tailwind. The
+  static Storybook build currently emits overlapping utility/preflight content
+  in its preview and library CSS assets. Review CSS delivery when defining the
+  library's distribution contract; do not remove required imports or scanning
+  without validating consumers.
+- The dark palette is repeated for explicit themes and system preference in the
+  token package. Future consolidation must preserve explicit and nested theme
+  precedence and system fallback.
+- Storybook now documents Button, SegmentedControl, and shared scrollbars;
+  StatusScreen still has no stories. Add useful coverage as those APIs and
+  foundations are reviewed, without inventing new components or variants.
+
+### Conventions verification — 2026-10-24
+
+This update changes development documentation and agent instructions only.
+No source, styling, configuration, or dependency change was needed to establish
+the conventions. `pnpm check` passed formatting, lint, type checking, all 12
+tests across four files, and the React library, portfolio, and Storybook builds.
+`git diff --check` passed. Storybook retained its existing preview chunk-size
+warning.
+
+The running Storybook reloaded the imported Button with shared dark primary,
+foreground, and canvas colors and no browser console errors. The available
+browser has no system-color emulation; native light-mode and live system
+switching were not retested. Existing theme/browser verification limits below
+remain applicable.
 
 ## Design philosophy
+
+### SegmentedControl — 2026-10-24
+
+The [approved component design](../superpowers/specs/2026-10-24-segmented-control-design.md)
+defines a generic controlled single-selection component, independent of portfolio
+navigation or theme persistence. The reference screenshot informs its outlined
+rounded track and inset selected pill only; option counts, values, and callbacks
+are entirely supplied by each consumer.
+
+Native radio inputs own selection semantics and keyboard navigation. Browser
+inspection demonstrated that removing a focused radio drops
+focus to the page body; a local recovery step selects a focus target (without
+changing selection) only after removal/disabling. At 320px, native arrow focus
+also left a long-label segment partly clipped. A nearest-aligned `scrollIntoView`
+on focus addresses that browser-verified gap. The approved extension adds local
+primary-mouse drag scrolling only when overflow exists, using a 6px threshold,
+native pointer capture, and suppression of the drag's click. There are no custom
+keyboard handlers, roving tabindex, global scroll listeners, or gesture library;
+touch input keeps native panning.
+
+The approved readability refactor keeps generic pointer handling in the internal
+`useHorizontalDragScroll` hook and radio recovery/reveal in the component-local
+`useRadioGroupFocus` hook. A bubbling group focus handler refreshes a pending
+drag's scroll baseline after the input reveals itself. The hooks have no public
+exports, configuration layer, or application-specific behavior. Selection,
+callback dispatch, public types, and rendering remain in SegmentedControl.
+
+Component-owned Tailwind styles consume existing semantic tokens. The selected
+segment inverts foreground/background; the track uses surface and border roles,
+and unselected text uses muted foreground. Segment height is at least 44px;
+horizontal overflow stays within the control, and long labels can wrap. Selected,
+hover, and disabled appearance stay in the library without consumer appearance
+classes or added palette values.
+
+The optional `color` prop accepts opaque absolute CSS accents. Colocated component
+CSS uses custom properties, native `contrast-color()` for selected text, and
+`color-mix()` for hover states. Focus-specific visual styling was removed at the
+user's explicit request; hover remains independent of keyboard focus.
+Custom accents are guarded by CSS feature detection;
+unsupported engines and omitted colors retain the original semantic pair.
+Transparency, CSS-variable colors, JavaScript color resolution, and color libraries
+are outside the approved scope. Actual contrast must be measured, not inferred
+from feature detection alone.
+
+Regular stories expose a Storybook-only Preview color mode control using an
+inherited shared `data-theme` scope; the argument is never forwarded to the
+component. Fixed side-by-side and nested comparisons remain useful independently
+of that control. The SingleOption story was removed; the component still supports
+single options without imposing a minimum.
+
+Light/dark Storybook scopes use the actual shared themes. Glass appearance and
+the visual-style selection mechanism remain deferred; this component adds no
+theme prop, provider, selector, persistence, or new shared theme implementation.
+See the [implementation plan](../superpowers/plans/2026-10-24-segmented-control.md)
+for verification evidence and any remaining browser limitations.
+
+### Switch
+
+`packages/ui-react` exports the controlled binary `Switch`, `SwitchProps`, and
+`SwitchState`. `checked` and `onCheckedChange` belong to the consumer; the
+component uses one native checkbox with `role="switch"`. Clicking anywhere
+toggles, Tab enters/leaves, and Space toggles using native browser behavior.
+Provide exactly one stable `aria-label` or `aria-labelledby`; both visual state
+contents are decorative to assistive technology.
+
+`uncheckedState` and `checkedState` supply nonempty text labels and optional
+ReactNode icons. `presentation` selects text (default), icon-text, or icon-only;
+icon-only requires both icons through the public type. Supply noninteractive
+icons using `currentColor`. No icon library, theme logic, persistence, or
+application state is included.
+
+An outlined rounded surface, equal-width positions, and a sliding highlight
+reuse the SegmentedControl visual language and semantic tokens. Labels wrap
+inside constrained widths. Icon-only positions are 44px squares, keeping the
+rounded-full moving highlight circular inside the pill track. Native disabled
+behavior retains selection; subtle
+hover and disabled appearance stay in the library. Keyboard focus uses a
+component-local foreground border and 1px box-shadow, without a prominent outline.
+Transitions respect reduced motion. The optional opaque absolute `color` accent
+uses the same feature-detected CSS contrast/mixing contract and semantic fallback
+as SegmentedControl. Shared light/dark scopes work unchanged; visual-style themes
+remain deferred.
+
+`Components/Switch` documents text, icon-text, icon-only, disabled, light/dark,
+custom color, and constrained-width examples. Default covers text-only usage;
+there is no duplicate TextOnly story. The Preview color mode control follows
+the existing Storybook-only convention.
+
+### NavLink
+
+`packages/ui-react` exports `NavLink` and `NavLinkProps`. The component is a native
+anchor with required `href`, standard anchor props, and a `variant` of `simple`
+(default) or `underline`. Native `aria-current` is the single source of current
+appearance: omitted or false is inactive; use `page` for a current page and
+`location` for a current section. Consumers own destination selection and supply
+meaningful content or an accessible name. No router or selection state is included.
+
+Simple links use muted text at rest and foreground text on hover/current.
+Underline links also reserve an absolute underline: subdued on hover and solid
+when current, without changing dimensions. Text weight stays stable. Both variants
+wrap long labels, consume semantic light/dark tokens, and use a subtle 1px
+foreground box-shadow for keyboard focus. Transitions respect reduced motion.
+Consumers own surrounding navigation layout; `className` augments base classes.
+The optional CSS `color` accent applies to hover/current text and the underline
+through `currentColor`. Omit it to retain semantic defaults. Inactive text and
+the semantic keyboard-focus shadow remain unchanged; consumers choose an accent
+with readable contrast against the surrounding theme. Standard `style` props
+are preserved, and removing the accent restores the semantic color.
+
+`Components/NavLink` documents both variants, current/inactive states, custom
+color, interactive light/dark comparisons, and constrained widths. The Preview color mode control
+follows the existing Storybook convention. Story-only click handlers prevent
+navigation and select example destinations; the library preserves native anchors.
+
+### Shared scrollbar foundation
+
+`packages/design-tokens/src/scrollbars.css` is imported once by the shared CSS
+entry point already consumed by the portfolio and Storybook previews. It applies
+to ordinary overflow regions and UI components, with no component-specific copies.
+Track, thumb, thumb hover, and inset shading use the existing semantic surface,
+muted foreground, foreground, and border roles respectively, so nested shared
+Light/Dark scopes adapt without new palettes.
+
+The standards path uses `scrollbar-width: thin` and `scrollbar-color`; engines
+supporting WebKit scrollbar pseudo-elements use a mutually exclusive 8px vertical
+and 5px horizontal path. Native scrollbar visibility and scrolling remain intact.
+Firefox/platform thickness and hover capabilities may differ; forced-color modes
+retain native styling. OS overlay-scrollbar preferences can still govern when a
+scrollbar is displayed. Storybook's tool-owned manager is outside the project
+preview stylesheet; its own scrollbars are not overridden.
+
+### Portfolio Navbar and LandingPage
+
+`App` now renders the app-owned `LandingPage` with one `Navbar` and a main
+landmark containing `Hero`. Navbar currently displays ABIGAIL OJEDA and the
+app-owned ColorModeSwitch wrapper around the shared icon-only Switch. The user
+temporarily commented out the navigation links and hash-selection code. Related
+navigation tests and assertions are also commented out, with their code retained
+for restoration. Main/heading, branding, theme-control, and Hero coverage remain
+active. Fragment destinations remain available for future restoration. There is
+no router, scrollspy, or mobile-menu implementation in this iteration.
+
+Hero now uses the [approved two-column redesign](../superpowers/specs/2026-11-01-hero-redesign.md),
+with a stacked name, semantic red accent underline, greeting pill, contact links,
+live experience hours, and a Joy Machine card. Title retains its heading-level
+and size API; its hero size is bold sans-serif without the former glow, while the
+section size retains its existing appearance. The unused Alice font request was
+removed. Left-column supporting copy and contacts use compact sizes, with a thin
+angled underline matching the correction reference. The user's temporary Navbar
+edit is preserved.
+
+The pill and card have separate stable hover containers, with default rotations
+of -8 and +10 degrees. CSS transitions straighten each independently. Focus does
+not control rotation, so mouse leave restores tilt even after clicking the button.
+One-time entrance animations run on separate
+wrappers. At narrow widths the card is fluid and stacks after the introduction,
+with room for its rotated corners and hard offset shadow.
+
+Contact links and the Joy Machine action use the shared Button, preserving native
+anchor/button semantics. Filled neutral and muted tones use semantic colors;
+LinkedIn uses the mixed neutral surface. The shared
+accent role (`--ds-color-accent`, mapped to Tailwind `accent`) is #FF4B55 in light
+mode and #FF7078 in dark mode. Existing token values and theme selection are
+preserved. Existing Button variants and default appearance are preserved.
+
+`useJoyMachine` appends short-lived decorative emoji bursts and cleans up each
+burst independently, including pending timers on unmount. Rendering stays in
+JoyMachine; distributed, staggered, non-intercepting emojis (including pink hearts
+and no rainbows) float upward, or fade in place under
+reduced motion. Reduced motion also omits entrance travel and hover transitions.
+The experience interval updates every second from 1 October 2020 at midnight in
+Madrid, with cleanup on unmount and no live announcements. The real CV uses the
+deployment BASE_URL and a meaningful download filename.
+
+Navbar uses semantic background/border translucency and backdrop blur locally.
+This does not introduce the deferred shared Glass visual style or restyle the
+library components. The current header uses a flex row for the name and Switch.
+Native library focus indicators remain unchanged. ColorModeSwitch passes Heroicons SunIcon/MoonIcon
+from the 24px outline set through Switch's existing state-icon props. Heroicons is a dependency
+of `apps/portfolio` only; no custom icon markup is duplicated.
+
+ColorModeSwitch uses `src/hooks/useColorMode` for the minimal
+session-only color-mode wiring. The hook respects an
+explicit root `data-theme` or follows the initial/live system preference until
+the user chooses a mode. Explicit choices set the existing root `data-theme`
+attribute; media listeners are cleaned up. No theme provider, shared theme API,
+new tokens, or persistence was added. Future persistence remains deferred.
+
+Navbar renders `<ColorModeSwitch />` without theme props; LandingPage renders
+`<Navbar />` and owns page composition only. The hook is not exported through a
+barrel or the shared UI library. Existing initialization, root scope, listeners,
+appearance, and behavior are preserved by this responsibility extraction.
+See the [approved refactor plan](../superpowers/plans/2026-10-25-color-mode-switch-refactor.md).
+
+### Status page
+
+The following status-page description and verification are historical. The
+StatusScreen and ComingSoonIllustration implementations remain available; the
+active app entry now renders LandingPage as described above.
 
 The initial status page is minimal, modern, friendly, and slightly playful.
 The [light](mockups/maintenance/maintenance_light_mode_mockup.png) and
 [dark](mockups/maintenance/maintenance_dark_mode_mockup.png) mockups guide colors,
 composition, proportions, and typography. Responsive reflow takes priority over
 fixed mockup measurements. Their presentation margins are not a viewport frame.
+
+## Planned theming architecture
+
+The planned system has two independent customization dimensions:
+
+- **Color mode:** light and dark.
+- **Visual style:** minimal and glass initially, with more styles possible later.
+
+Every combination must be supported: minimal-light, minimal-dark, glass-light,
+and glass-dark. These names describe combinations, not proposed API values or
+selectors. Each framework's UI library serves all combinations through the same
+components; do not duplicate libraries or component implementations per theme.
+
+Framework-independent foundations and shared theme values belong in
+`packages/design-tokens`. Component styling and behavior belong in each
+framework's UI library. When theming is implemented, shared components must
+consume semantic tokens and adapt through their library-owned styling to the
+selected visual style. Consumers must not need to add appearance-specific CSS
+classes manually. Component-specific variants remain separate from these theme
+dimensions; this direction does not require a theme prop on every component.
+Applications and Storybook consume the shared definitions without copying theme
+values or recreating component appearance rules.
+
+Preserve the existing `data-theme="light"` / `data-theme="dark"` behavior,
+including system fallback and nearest explicit theme precedence. Do not overload
+those values with visual styles or combined names. The final selection API,
+style selectors, token coverage, composition mechanism, and any provider needs
+remain undecided until a focused theming specification is approved.
+
+This direction refines the overview's [progressive customization](../project-overview.md#progressive-customization).
+The agreed future `localStorage` choice for the initial color-mode preference
+remains intact. This documentation adds no themes, selectors, tokens, or runtime
+behavior; the current light/dark implementation is described below.
 
 ## Semantic colors and themes
 
@@ -44,10 +404,10 @@ This feature adds no toggle, provider, or storage. The agreed future
 
 ## Typography
 
-The existing Tailwind sans-serif stack is unchanged. The heading uses
-`text-3xl sm:text-4xl leading-tight font-bold`: 30px below 640px, 36px from
+The existing Tailwind sans-serif stack is unchanged. The current heading uses
+`text-4xl sm:text-6xl leading-tight font-bold`: 36px below 640px, 60px from
 640px, weight 700, and 1.25 line height. The subtitle uses
-`text-base leading-5`: 16px with 20px line height. Both inherit `foreground`.
+`text-lg leading-5`: 18px with 20px line height. Both inherit `foreground`.
 `whitespace-pre-line` preserves actual subtitle newlines alongside automatic
 wrapping; `wrap-anywhere` on both text elements also breaks long unbroken words.
 There is no HTML parsing, truncation, line clamp, or fallback copy.
@@ -200,3 +560,70 @@ on 2026-10-19 without commits.
 
 Significant future design-system changes must update this document with the
 decision, its rationale, and its effect on existing consumers.
+
+### Reusable Button
+
+Button evolves the existing component with `filled` (default), `outlined`,
+`bottom-border`, and `text` variants. Optional `icon: ReactNode` and
+`iconPosition: "start" | "end"` support text, icon/text, and icon-only content.
+Icons are decorative; consumers supply currentColor-based SVGs and must name
+icon-only controls with `aria-label` or `aria-labelledby`. This requirement is
+not enforced with additional content unions.
+
+An `href`-discriminated union forwards native button or anchor attributes and
+correctly typed events. Buttons default to `type="button"`; explicit submit and
+reset remain supported. No existing consumer depended on implicit submission.
+Disabled is button-only; anchors preserve native navigation and link attributes.
+
+`radius` accepts CSS border-radius values, including numeric React pixel values;
+`padding` is `normal` (default) or `none`. Default radius and spacing retain
+Tailwind scales. Optional `paddingX` (`CSSProperties["paddingInline"]`) and
+`paddingY` (`CSSProperties["paddingBlock"]`) independently override the preset's
+horizontal and vertical padding, including zero values, on buttons, links, and
+icon-only controls. Numeric values use React's pixel convention; CSS strings
+retain their units. Explicit axis props override the corresponding inline style
+values; omitted props preserve consumer styles and preset defaults.
+The `bottom-border` variant always has zero radius, including
+when a radius override is supplied; other variants retain CSS radius customization.
+Storybook offers labeled None/Small/Medium/Large/Pill presets without changing
+the component API. `className` extends component classes and `style` is preserved;
+explicit radius/color props take precedence over their corresponding overrides.
+
+Filled Button controls also support `tone="primary"` (the unchanged default),
+`tone="neutral"` (foreground/background), and `tone="muted"` (a mixed neutral
+surface). Tones are owned by Button.css and adapt through existing semantic theme
+tokens. Transparent variants retain their existing styling; a supported explicit
+custom color overrides the tone. Storybook documents Neutral and Muted examples.
+
+The optional opaque absolute CSS `color` follows Switch/SegmentedControl's
+contract. It controls filled backgrounds or transparent-variant text/borders.
+With native `contrast-color()` and `color-mix()` support, filled text uses a
+contrasting black/white foreground for its actual background. Hover mixes the
+relevant color with 6% white; borders follow currentColor. This corrects Button's
+former dark contrast issue without changing shared primary tokens. Unsupported
+engines retain a semantic foreground/background filled pair and semantic
+transparent accents, with no custom accent or hover lightening. Transparency,
+CSS-variable colors, and automatic contrast correction for arbitrary transparent
+accents are unsupported; consumers must choose readable accents for their surface
+and hover state, including the distinguishability of borders or filled surfaces.
+Feature detection alone does not establish contrast. Example custom colors
+demonstrate suitable light/dark choices.
+
+Keyboard focus uses a subtle semantic box-shadow. Interactive buttons and anchors
+use a pointer cursor; disabled native buttons use the default cursor and suppress
+hover. Disabled text/icons use muted-foreground at full opacity; filled disabled
+buttons use muted backgrounds and a visible border, preserving legibility.
+Color transitions respect reduced motion. Styles
+remain colocated in the library; Storybook consumes real exports and shared theme
+scopes, with interactive hover/focus instructions and a light/dark comparison.
+A dedicated IconOnly story demonstrates named buttons through live args,
+including variant and disabled controls. The theme comparison forwards shared
+configuration to all four variants in both modes, including icon-only content.
+Filled, Outlined, BottomBorder, and Text stories render live args, including icon
+selection and independent axis-padding controls. BottomBorder hides radius;
+the Padding gallery demonstrates no padding, either axis, and both axes. Fixed
+galleries expose only controls they consume. Variant and radius choices are
+labeled radio controls, avoiding unreadable native select popups. Content and
+NativeLinks stories and form-type Controls are omitted at the user's request;
+the native component API is unchanged. There are no manager-wide select overrides.
+See the [approved design and plan](../superpowers/plans/2026-10-25-button.md).

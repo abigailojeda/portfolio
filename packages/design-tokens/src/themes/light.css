@@ -2,6 +2,7 @@
 [data-theme="light"] {
   --ds-color-background: #f4f1ed;
   --ds-color-foreground: #000000;
+  --ds-color-accent: #ff4b55;
 
   --ds-color-blob-back: #cbd1d8;
   --ds-color-blob-front: #e1e8f0;

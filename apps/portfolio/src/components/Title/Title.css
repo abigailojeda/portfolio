@@ -1,0 +1,49 @@
+:root,
+[data-theme="light"] {
+  --portfolio-title-glow: rgb(242 99 255 / 80%);
+}
+
+[data-theme="dark"] {
+  --portfolio-title-glow: rgb(142 75 150 / 45%);
+}
+
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]):not([data-theme="dark"]) {
+    --portfolio-title-glow: rgb(142 75 150 / 45%);
+  }
+}
+
+.portfolio-title[data-size="section"]::before {
+  position: absolute;
+  z-index: -1;
+  top: -4rem;
+  left: 0;
+  width: clamp(14rem, 25vw, 23rem);
+  aspect-ratio: 1;
+  content: "";
+  pointer-events: none;
+  background: radial-gradient(
+    ellipse,
+    var(--portfolio-title-glow),
+    transparent 70%
+  );
+  filter: blur(55px);
+  transform: translateX(-50%);
+  animation: title-glow 14s ease-in-out infinite alternate;
+}
+
+@keyframes title-glow {
+  from {
+    left: 0;
+  }
+
+  to {
+    left: 25%;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .portfolio-title[data-size="section"]::before {
+    animation: none;
+  }
+}

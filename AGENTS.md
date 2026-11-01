@@ -26,8 +26,64 @@ implemented requirements.
 - Ask for clarification when a decision materially affects architecture or
   expected behavior. Never silently change an approved architectural decision.
 
+## Code readability
+
+- Prefer readability over compressed code across React, Vue, Angular, TypeScript,
+  components, and tests. Separate functions and logical blocks with blank lines.
+- Keep functions small, focused, and clearly named. Always use braces around
+  conditionals, including early returns; prefer guard clauses to deep nesting.
+- Use named handlers for meaningful event logic. Keep rendering separate from
+  complex behavior, extracting hooks or utilities only when a clear responsibility
+  justifies them, using each framework's idioms.
+- Organize tests by behavior and responsibility; use small setup helpers where
+  they reduce meaningful duplication without adding testing infrastructure.
+- Apply KISS and SOLID/DRY pragmatically; avoid speculative abstractions and
+  unnecessary layers. Add short English comments only for non-obvious intent.
+
+## Styling and Design System
+
+Follow the [styling conventions](docs/design/DESIGN.md#styling-and-design-system-conventions).
+
+- Keep shared colors, typography, spacing, border radii, and themes in
+  `packages/design-tokens`. Token definitions must stay framework-independent;
+  keep Tailwind-specific mappings in the existing adapter.
+- Keep reusable UI and its styling in `packages/ui-react`. Expose required,
+  reusable visual variants through typed props instead of restyling copies in
+  consumers. Do not invent components, variants, or tokens without a use case.
+- Follow the [planned theming architecture](docs/design/DESIGN.md#planned-theming-architecture):
+  color mode (light/dark) and visual style (minimal/glass initially) are independent.
+  Components must adapt through semantic tokens and framework-owned styling,
+  without manual consumer appearance classes or duplicated UI libraries. Preserve
+  existing `data-theme` light/dark behavior; leave the final theme API to its
+  approved specification.
+- Prefer Tailwind utilities in components for layout, spacing, flex/grid,
+  alignment, and simple styling. Keep necessary custom CSS beside its component;
+  keep page/section-only CSS with that page or section in `apps/portfolio`.
+- Keep global CSS limited to shared foundations, Tailwind setup, and minimal
+  document defaults. Reuse existing tokens/components; similar utility lists
+  alone do not justify a reusable abstraction or dependency.
+- Across React, Vue, and Angular, avoid default browser outlines and prominent
+  CSS outline rings on interactive components unless explicitly requested.
+  Prefer subtle, custom focus indicators that match the visual identity, using
+  `:focus-visible` where appropriate to distinguish keyboard focus from pointer
+  interactions. By default preserve visible keyboard focus with accessible borders,
+  box-shadows, or equivalent styling; never add a global `outline: none` reset
+  without replacement focus indication. Document explicit component-specific
+  exceptions; SegmentedControl currently has no focus effect at the user's request.
+- Document reusable components, supported variants, states, and usage in the
+  React Storybook; add foundation documentation where useful. Consume actual
+  library exports and shared styles, preserving the existing source scanning.
+- Preserve appearance, behavior, accessibility, and responsive layouts. Follow
+  the documented current gaps without silently expanding the Design System or
+  undertaking a broad CSS refactor.
+
 ## Codex, Superpowers, and specification-driven development
 
+- Keep permanent design specifications in `docs/superpowers/specs/` and
+  implementation plans in `docs/superpowers/plans/`. A concise combined plan
+  is sufficient for small changes; separate documents are not required.
+- Keep `.superpowers/` as an entirely Git-ignored local execution workspace.
+  `docs/design/` holds design guidelines and mockups.
 - Follow installed Superpowers skills and their documented workflows where
   applicable; these instructions complement them rather than replace them.
 - For nontrivial functionality: understand the request and inspect existing
