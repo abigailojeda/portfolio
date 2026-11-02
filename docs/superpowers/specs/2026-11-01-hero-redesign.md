@@ -107,7 +107,7 @@ hover transitions. Put entrance animation on wrappers separate from the pill
 and card rotations so completion preserves their tilted default states. Prefer
 Tailwind utilities and keep only necessary keyframes beside Hero/JoyMachine.
 
-Each Give me joy! activation appends a small burst of approximately six cheerful
+Each Boost your mood! activation appends a small burst of approximately six cheerful
 emojis. Start them around the button and animate upward in a vertical trail,
 with wider distributed horizontal origins, vertical-origin jitter, drift, delay,
 duration, rotation, and size. Stagger the particles into a loose trail. Remove
