@@ -12,6 +12,7 @@
     "@heroicons/react": "^2.2.0",
     "@portfolio/design-tokens": "workspace:^",
     "@portfolio/ui-react": "workspace:^",
+    "@vercel/analytics": "^2.0.1",
     "react": "^19.2.8",
     "react-dom": "^19.2.8"
   },
