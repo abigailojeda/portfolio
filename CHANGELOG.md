@@ -1,5 +1,11 @@
 # Changelog
 
+## [0.4.0](https://github.com/abigailojeda/portfolio/compare/v0.3.0...v0.4.0) (2026-11-02)
+
+### Features
+
+- install adt set vercel analytics ([af3709e](https://github.com/abigailojeda/portfolio/commit/af3709e190d8ed61590e26702c7a8db3eca613c5))
+
 ## [0.3.0](https://github.com/abigailojeda/portfolio/compare/v0.2.0...v0.3.0) (2026-11-01)
 
 ### Features
