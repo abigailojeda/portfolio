@@ -59,7 +59,7 @@ export function JoyMachine() {
               paddingY={8}
               className="min-h-11 text-xl"
             >
-              Give me joy!
+              Boost your mood!
             </Button>
           </div>
         </div>

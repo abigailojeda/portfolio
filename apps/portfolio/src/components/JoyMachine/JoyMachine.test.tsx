@@ -8,7 +8,7 @@ describe("JoyMachine", () => {
   it("releases additional decorative bursts on repeated button clicks", async () => {
     const user = userEvent.setup();
     const { container } = render(<JoyMachine />);
-    const button = screen.getByRole("button", { name: "Give me joy!" });
+    const button = screen.getByRole("button", { name: "Boost your mood!" });
 
     await user.click(button);
     const firstBurst = container.querySelectorAll(".joy-emoji").length;
@@ -21,7 +21,7 @@ describe("JoyMachine", () => {
     expect(
       container.querySelector(".joy-emoji")?.closest('[aria-hidden="true"]'),
     ).toBeInTheDocument();
-    expect(button).toHaveAccessibleName("Give me joy!");
+    expect(button).toHaveAccessibleName("Boost your mood!");
   });
 
   it("supports keyboard activation", async () => {
@@ -29,7 +29,9 @@ describe("JoyMachine", () => {
     const { container } = render(<JoyMachine />);
 
     await user.tab();
-    expect(screen.getByRole("button", { name: "Give me joy!" })).toHaveFocus();
+    expect(
+      screen.getByRole("button", { name: "Boost your mood!" }),
+    ).toHaveFocus();
     await user.keyboard("{Enter}");
 
     expect(container.querySelectorAll(".joy-emoji").length).toBeGreaterThan(0);
