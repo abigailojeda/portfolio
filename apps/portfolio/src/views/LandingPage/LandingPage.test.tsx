@@ -33,7 +33,7 @@ describe("LandingPage", () => {
       main.getByRole("heading", { name: "Abigail Ojeda", level: 1 }),
     ).toBeInTheDocument();
     expect(
-      main.getByRole("button", { name: "Give me joy!" }),
+      main.getByRole("button", { name: "Boost your mood!" }),
     ).toBeInTheDocument();
   });
 });
